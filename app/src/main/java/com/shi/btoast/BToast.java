@@ -8,6 +8,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -30,24 +33,24 @@ public class BToast {
     private static final int DURATION_SHORT = 2000;
     private static final int DURATION_LONG = 3500;
 
-    private BToast(){
+    private BToast() {
         throw new UnsupportedOperationException("u can't instantiate me...");
     }
 
-    public static void init(Application app){
+    public static void init(Application app) {
         BToast.app = app;
         subThreadHandler = new SubThreadHandler();
         app.registerActivityLifecycleCallbacks(new ActivityLifecycleImpl());
-        startAgentThread();// 启动代理线程
+        runAgentThread();// 启动代理线程
     }
 
-    private static void startAgentThread() {
+    private static void runAgentThread() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                for (;;){
+                for (; ; ) {
                     synchronized (toasts) {
-                        if (toasts.size() > 0){
+                        if (toasts.size() > 0) {
                             ToastEntity toastEntity = toasts.remove(toasts.size() - 1);
                             Message message = Message.obtain();
                             message.what = SHOW_TOAST;
@@ -60,7 +63,7 @@ public class BToast {
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                        }else {
+                        } else {
                             canNotify = true;
                             try {
                                 toasts.wait();
@@ -74,17 +77,21 @@ public class BToast {
         }).start();
     }
 
-    private static class SubThreadHandler extends Handler{
+    private static class SubThreadHandler extends Handler {
         @SuppressLint("WrongConstant")
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if (msg.what == SHOW_TOAST){
+            if (msg.what == SHOW_TOAST) {
                 ToastEntity toastEntity = (ToastEntity) msg.obj;
-                if (toastEntity.text != null){
-                    Toast.makeText(app,toastEntity.text,toastEntity.duration).show();
-                }else {
-                    Toast.makeText(app,toastEntity.textRes,toastEntity.duration).show();
+                View toastLayout = ((LayoutInflater)app.getSystemService("layout_inflater"))
+                        .inflate(R.layout.toast_layout, (ViewGroup)null);
+                if (toastEntity.text != null) {
+                    Toast toast = Toast.makeText(app, toastEntity.text, toastEntity.duration);
+                    toast.setView(toastLayout);
+                    toast.show();
+                } else {
+                    Toast.makeText(app, toastEntity.textRes, toastEntity.duration).show();
                 }
             }
         }
@@ -95,18 +102,18 @@ public class BToast {
      *
      * @param context Context类名
      */
-    private static void remove(Context context){
-        remove(context.getClass().getSimpleName(),true);
+    private static void remove(Context context) {
+        remove(context.getClass().getSimpleName(), true);
     }
 
     /**
      * 移除某一个Context中提交的可移除的toast
      *
-     * @param context Context 类名
+     * @param context         Context 类名
      * @param removeHoldToast 是否移除HOLDER等级的toast
      */
-    private static void remove(Context context, boolean removeHoldToast){
-        remove(context.getClass().getSimpleName(),removeHoldToast);
+    private static void remove(Context context, boolean removeHoldToast) {
+        remove(context.getClass().getSimpleName(), removeHoldToast);
     }
 
     /**
@@ -114,8 +121,8 @@ public class BToast {
      *
      * @param name Context类名
      */
-    private static void remove(final String name,final boolean removeHoldToast){
-        synchronized (toasts){
+    private static void remove(final String name, final boolean removeHoldToast) {
+        synchronized (toasts) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 toasts.removeIf(new Predicate<ToastEntity>() {
                     @Override
@@ -124,15 +131,15 @@ public class BToast {
                                 (removeHoldToast || entity.level == LEVEL_CAN_REMOVE);
                     }
                 });
-            }else {
+            } else {
                 Set<ToastEntity> removeSet = new HashSet<>();
-                for(ToastEntity entity : toasts){
+                for (ToastEntity entity : toasts) {
                     if (entity.className.equals(name) &&
-                            (removeHoldToast || entity.level == LEVEL_CAN_REMOVE)){
+                            (removeHoldToast || entity.level == LEVEL_CAN_REMOVE)) {
                         removeSet.add(entity);
                     }
                 }
-                if (removeSet.size() > 0){
+                if (removeSet.size() > 0) {
                     toasts.removeAll(removeSet);
                 }
             }
@@ -142,9 +149,9 @@ public class BToast {
     /**
      * 移除所有可移除的toast
      */
-    public static void remove(final boolean removeHoldToast){
-        synchronized (toasts){
-            if (removeHoldToast){
+    public static void remove(final boolean removeHoldToast) {
+        synchronized (toasts) {
+            if (removeHoldToast) {
                 toasts.clear();
                 return;
             }
@@ -155,43 +162,51 @@ public class BToast {
                         return entity.level == LEVEL_CAN_REMOVE;
                     }
                 });
-            }else {
+            } else {
                 Set<ToastEntity> removeSet = new HashSet<>();
-                for(ToastEntity entity : toasts){
-                    if (entity.level == LEVEL_CAN_REMOVE){
+                for (ToastEntity entity : toasts) {
+                    if (entity.level == LEVEL_CAN_REMOVE) {
                         removeSet.add(entity);
                     }
                 }
-                if (removeSet.size() > 0){
+                if (removeSet.size() > 0) {
                     toasts.removeAll(removeSet);
                 }
             }
         }
     }
 
-    public static void toast(Context context,CharSequence text,int duration){
-        toast(context,text,duration,LEVEL_CAN_REMOVE);
+    public static void toast(Context context, CharSequence text) {
+        toast(context, text, Toast.LENGTH_SHORT, LEVEL_CAN_REMOVE);
     }
 
-    public static void toast(Context context,int textRes,int duration){
-        toast(context,textRes,duration,LEVEL_CAN_REMOVE);
+    public static void toast(Context context, int textRes) {
+        toast(context, textRes, Toast.LENGTH_SHORT, LEVEL_CAN_REMOVE);
     }
 
-    public static void toast(Context context,CharSequence text,int duration,int level){
+    public static void toast(Context context, CharSequence text, int duration) {
+        toast(context, text, duration, LEVEL_CAN_REMOVE);
+    }
+
+    public static void toast(Context context, int textRes, int duration) {
+        toast(context, textRes, duration, LEVEL_CAN_REMOVE);
+    }
+
+    public static void toast(Context context, CharSequence text, int duration, int level) {
         ToastEntity toastEntity =
-                new ToastEntity(context.getClass().getSimpleName(),text,duration,level);
+                new ToastEntity(context.getClass().getSimpleName(), text, duration, level);
         addToast(toastEntity);
     }
 
-    public static void toast(Context context,int textRes,int duration,int level){
+    public static void toast(Context context, int textRes, int duration, int level) {
         ToastEntity toastEntity =
-                new ToastEntity(context.getClass().getSimpleName(),textRes,duration,level);
+                new ToastEntity(context.getClass().getSimpleName(), textRes, duration, level);
         addToast(toastEntity);
     }
 
-    private static void addToast(ToastEntity entity){
-        synchronized (toasts){
-            remove(entity.className,false);
+    private static void addToast(ToastEntity entity) {
+        synchronized (toasts) {
+            remove(entity.className, false);
             toasts.add(entity);
             if (canNotify)
                 toasts.notifyAll();
@@ -199,7 +214,7 @@ public class BToast {
 
     }
 
-    static final class ToastEntity{
+    static final class ToastEntity {
         String className;
         CharSequence text;
         int textRes = -1;
@@ -221,7 +236,7 @@ public class BToast {
         }
     }
 
-    static class ActivityLifecycleImpl implements Application.ActivityLifecycleCallbacks{
+    static class ActivityLifecycleImpl implements Application.ActivityLifecycleCallbacks {
 
         @Override
         public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
