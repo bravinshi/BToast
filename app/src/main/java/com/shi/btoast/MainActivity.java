@@ -1,13 +1,9 @@
 package com.shi.btoast;
 
-import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.webkit.PermissionRequest;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
                 BToast.success(v.getContext())
                         .text("这是一段测试文字")
                         .textColor(Color.WHITE)
-                        .animationGravity(BToast.GRAVITY_RIGHT)
+                        .animationGravity(BToast.ANIMATION_GRAVITY_RIGHT)
                         .animate(true)
                         .show();
             }

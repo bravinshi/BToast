@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Build;
@@ -13,12 +12,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -70,10 +67,15 @@ public class BToast {
     @ColorInt
     private static int NORMAL_COLOR = Color.parseColor("#353A3E");
 
-    public static final int GRAVITY_LEFT = 10;
-    public static final int GRAVITY_TOP = 20;
-    public static final int GRAVITY_RIGHT = 30;
-    public static final int GRAVITY_BOTTOM = 40;
+    public static final int ANIMATION_GRAVITY_LEFT = 10;
+    public static final int ANIMATION_GRAVITY_TOP = 20;
+    public static final int ANIMATION_GRAVITY_RIGHT = 30;
+    public static final int ANIMATION_GRAVITY_BOTTOM = 40;
+
+    public static final int LAYOUT_GRAVITY_LEFT = 1;
+    public static final int LAYOUT_GRAVITY_TOP = 2;
+    public static final int LAYOUT_GRAVITY_RIGHT = 3;
+    public static final int LAYOUT_GRAVITY_BOTTOM = 4;
 
     public static final int STYLE_FILLET = 100;
     public static final int STYLE_RECTANGLE = 200;
@@ -157,15 +159,7 @@ public class BToast {
                     if (toastDesc.animate){
 //                        view.getLocationInWindow();
                     }else {
-                        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-                        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
-                        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-                        lp.type = WindowManager.LayoutParams.TYPE_APPLICATION_PANEL;
-                        lp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-                                        | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
-                                        | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-                        lp.format = PixelFormat.TRANSPARENT;
-                        lp.gravity = Gravity.START | Gravity.TOP;
+                        WindowManager.LayoutParams lp = createWindowManagerLayoutParams();
 
                         int[] viewLocation = new int[2];
                         view.getLocationInWindow(viewLocation);
@@ -178,8 +172,9 @@ public class BToast {
 
                         applyStyle(toastLayout, toastDesc);
 
-                        lp.x = viewLocation[0] + view.getPaddingLeft();
-                        lp.y = viewLocation[1] + view.getMeasuredHeight();
+//                        lp.x = viewLocation[0];
+                        lp.y = viewLocation[1];
+
                         lp.packageName = view.getContext().getPackageName();
                         windowManager.addView(toastLayout, lp);
 
@@ -190,6 +185,20 @@ public class BToast {
                 }
             }
         }
+    }
+
+    private static WindowManager.LayoutParams createWindowManagerLayoutParams(){
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.type = WindowManager.LayoutParams.TYPE_APPLICATION_PANEL;
+        lp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
+                | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        lp.format = PixelFormat.TRANSPARENT;
+        lp.gravity = Gravity.CENTER_HORIZONTAL | Gravity.TOP;
+
+        return lp;
     }
 
     private static void showStaticToast(ToastDesc toastDesc) {
@@ -216,16 +225,16 @@ public class BToast {
 
         int gravity;
         switch (toastDesc.animationGravity){
-            case GRAVITY_LEFT:
+            case ANIMATION_GRAVITY_LEFT:
                 gravity = AnimationLayout.GRAVITY_LEFT;
                 break;
-            case GRAVITY_TOP:
+            case ANIMATION_GRAVITY_TOP:
                 gravity = AnimationLayout.GRAVITY_TOP;
                 break;
-            case GRAVITY_RIGHT:
+            case ANIMATION_GRAVITY_RIGHT:
                 gravity = AnimationLayout.GRAVITY_RIGHT;
                 break;
-            case GRAVITY_BOTTOM:
+            case ANIMATION_GRAVITY_BOTTOM:
                 gravity = AnimationLayout.GRAVITY_BOTTOM;
                 break;
                 default:
@@ -408,7 +417,7 @@ public class BToast {
 
         private boolean animate = false;
 
-        private int animationGravity = BToast.GRAVITY_TOP;
+        private int animationGravity = BToast.ANIMATION_GRAVITY_TOP;
         @ColorInt
         private int textColor = Color.WHITE;
 
@@ -417,6 +426,14 @@ public class BToast {
         private int textSize = 0;
 
         private int style = STYLE_FILLET;
+
+        private int layoutGravity = LAYOUT_GRAVITY_BOTTOM;
+
+        private int offsetX = 0;
+
+        private int offsetY = 0;
+
+        private boolean sameLength = false;
 
         private long animationDuration = DEFAULT_ANIMATION_DURATION;
 
@@ -470,6 +487,11 @@ public class BToast {
             return this;
         }
 
+        public ToastDesc sameLength(boolean sameLength) {
+            this.sameLength = sameLength;
+            return this;
+        }
+
         public ToastDesc animate(boolean animate) {
             this.animate = animate;
             return this;
@@ -482,6 +504,22 @@ public class BToast {
 
         public ToastDesc textSize(int textSize) {
             this.textSize = textSize;
+            return this;
+        }
+
+        public ToastDesc layoutGravity(int layoutGravity) {
+            this.layoutGravity = layoutGravity;
+            return this;
+        }
+
+
+        public ToastDesc offsetX(int offsetX) {
+            this.offsetX = offsetX;
+            return this;
+        }
+
+        public ToastDesc offsetY(int offsetY) {
+            this.offsetY = offsetY;
             return this;
         }
 
