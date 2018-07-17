@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
                         .text("这是一段测试文字")
                         .textColor(Color.WHITE)
                         .target(btn1)
+                        .relativeGravity(BToast.RELATIVE_GRAVITY_END)
                         .show();
             }
         });

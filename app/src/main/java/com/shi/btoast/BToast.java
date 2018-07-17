@@ -16,8 +16,10 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -79,6 +81,10 @@ public class BToast {
 
     public static final int STYLE_FILLET = 100;
     public static final int STYLE_RECTANGLE = 200;
+
+    public static final int RELATIVE_GRAVITY_START = 1;
+    public static final int RELATIVE_GRAVITY_END = 2;
+    public static final int RELATIVE_GRAVITY_CENTER = 3;
 
     private static WeakReference<View> currentToastView;
 
@@ -156,54 +162,115 @@ public class BToast {
                         showStaticToast(toastDesc);
                     }
                 } else {
+
                     if (toastDesc.animate){
 //                        view.getLocationInWindow();
                     }else {
-                        WindowManager.LayoutParams lp = createWindowManagerLayoutParams();
 
-                        int[] viewLocation = new int[2];
-                        view.getLocationInWindow(viewLocation);
+                        View toastLayout = createToastLayout();
+                        WindowManager.LayoutParams lp = createWindowManagerLayoutParams(view, toastDesc);
+
+
 
                         WindowManager windowManager = (WindowManager)view.getContext()
                                 .getSystemService(Context.WINDOW_SERVICE);
 
-                        StyleLayout toastLayout = (StyleLayout) (LayoutInflater.from(app)
-                                .inflate(R.layout.toast_layout_no_animation, null));
+//                        StyleLayout toastLayout = (StyleLayout) (LayoutInflater.from(app)
+//                                .inflate(R.layout.toast_layout_no_animation_style, null));
 
-                        applyStyle(toastLayout, toastDesc);
+//                        applyStyle(toastLayout, toastDesc);
 
-//                        lp.x = viewLocation[0];
-                        lp.y = viewLocation[1];
+                        if (toastDesc.sameLength){
 
-                        lp.packageName = view.getContext().getPackageName();
-                        windowManager.addView(toastLayout, lp);
+                        }else {
+                            if (toastDesc.relativeGravity == RELATIVE_GRAVITY_CENTER){
+                                lp.gravity = Gravity.CENTER_HORIZONTAL | Gravity.TOP;
+                            }else if (toastDesc.relativeGravity == RELATIVE_GRAVITY_START){
+                            }else {
+                                RelativeLayout parent = new RelativeLayout(view.getContext());
+                                RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(
+                                        ViewGroup.LayoutParams.WRAP_CONTENT
+                                        , ViewGroup.LayoutParams.WRAP_CONTENT);
+                                rlp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                                rlp.addRule(RelativeLayout.CENTER_VERTICAL);
+                                toastLayout.setLayoutParams(rlp);
+                                parent.addView(toastLayout);
 
-                        currentToastView = new WeakReference<View>(toastLayout);
+                                lp.width = view.getMeasuredWidth();
 
-                        view.postDelayed(removeViewRunnable, 3500);
+                                lp.gravity = Gravity.START | Gravity.TOP;
+
+                                lp.packageName = view.getContext().getPackageName();
+
+                                windowManager.addView(parent, lp);
+
+                                currentToastView = new WeakReference<View>(parent);
+
+                                view.postDelayed(removeViewRunnable, 3500);
+                            }
+                        }
+
+//                        lp.packageName = view.getContext().getPackageName();
+//                        windowManager.addView(toastLayout, lp);
+//
+//                        currentToastView = new WeakReference<View>(toastLayout);
+//
+//                        view.postDelayed(removeViewRunnable, 3500);
                     }
                 }
             }
         }
     }
 
-    private static WindowManager.LayoutParams createWindowManagerLayoutParams(){
+    private static View createToastLayout(){
+        return null;
+    }
+
+    private static WindowManager.LayoutParams createWindowManagerLayoutParams(View view,
+                                                                              ToastDesc toastDesc){
+
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
-        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
         lp.type = WindowManager.LayoutParams.TYPE_APPLICATION_PANEL;
         lp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                 | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
                 | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         lp.format = PixelFormat.TRANSPARENT;
-        lp.gravity = Gravity.CENTER_HORIZONTAL | Gravity.TOP;
+
+        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+        final int[] viewLocation = new int[2];
+        view.getLocationInWindow(viewLocation);
+
+        if (toastDesc.sameLength){
+            switch (toastDesc.layoutGravity){
+                case LAYOUT_GRAVITY_LEFT:
+                    break;
+                case LAYOUT_GRAVITY_TOP:
+                    lp.gravity = Gravity.START | Gravity.RELATIVE_LAYOUT_DIRECTION;
+                    lp.x = viewLocation[0] + toastDesc.offsetX;
+                    lp.y = viewLocation[1] - view.getMeasuredHeight() + toastDesc.offsetY;
+                    break;
+                case LAYOUT_GRAVITY_RIGHT:
+                    break;
+                case LAYOUT_GRAVITY_BOTTOM:
+                    lp.gravity = Gravity.START | Gravity.TOP;
+                    lp.x = viewLocation[0] + toastDesc.offsetX;
+                    lp.y = viewLocation[1] + view.getMeasuredHeight() + toastDesc.offsetY;
+                    break;
+            }
+
+        }else {
+
+        }
 
         return lp;
     }
 
     private static void showStaticToast(ToastDesc toastDesc) {
         StyleLayout toastLayout = (StyleLayout) (LayoutInflater.from(app)
-                .inflate(R.layout.toast_layout_no_animation, null));
+                .inflate(R.layout.toast_layout_no_animation_style, null));
 
         applyStyle(toastLayout, toastDesc);
 
@@ -419,7 +486,7 @@ public class BToast {
 
         private int animationGravity = BToast.ANIMATION_GRAVITY_TOP;
         @ColorInt
-        private int textColor = Color.WHITE;
+        private int textColor = DEFAULT_TEXT_COLOR;
 
         private WeakReference<View> target = null;
 
@@ -428,6 +495,8 @@ public class BToast {
         private int style = STYLE_FILLET;
 
         private int layoutGravity = LAYOUT_GRAVITY_BOTTOM;
+
+        private int relativeGravity = RELATIVE_GRAVITY_CENTER;
 
         private int offsetX = 0;
 
@@ -509,6 +578,11 @@ public class BToast {
 
         public ToastDesc layoutGravity(int layoutGravity) {
             this.layoutGravity = layoutGravity;
+            return this;
+        }
+
+        public ToastDesc relativeGravity(int relativeGravity) {
+            this.relativeGravity = relativeGravity;
             return this;
         }
 
