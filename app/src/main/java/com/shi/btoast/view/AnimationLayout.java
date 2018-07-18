@@ -8,9 +8,9 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
-public class AnimationLayout extends LinearLayout implements ValueAnimator.AnimatorUpdateListener {
+public class AnimationLayout extends RelativeLayout implements ValueAnimator.AnimatorUpdateListener {
 
     private ValueAnimator valueAnimator;
 

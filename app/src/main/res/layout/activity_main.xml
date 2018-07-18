@@ -23,4 +23,11 @@
         android:scaleType="center"
         android:layout_width="match_parent"
         android:layout_height="50dp" />
+
+    <Button
+        android:id="@+id/btn2"
+        android:text="success"
+        android:scaleType="center"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
 </LinearLayout>

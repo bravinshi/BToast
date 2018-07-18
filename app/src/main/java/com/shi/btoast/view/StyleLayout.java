@@ -42,7 +42,9 @@ public class StyleLayout extends RelativeLayout {
                 BToastUtils.setGradientDrawable(this, radiusArr, tintColor);
             }
         } else {
-            setBackgroundColor(tintColor);
+            if (tintColor != 0){
+                setBackgroundColor(tintColor);
+            }
         }
 
     }

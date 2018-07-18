@@ -9,6 +9,7 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity {
     private Button btn;
     private Button btn1;
+    private Button btn2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,14 +18,17 @@ public class MainActivity extends AppCompatActivity {
 
         btn = findViewById(R.id.btn);
         btn1 = findViewById(R.id.btn1);
+        btn2 = findViewById(R.id.btn2);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 BToast.success(v.getContext())
                         .text("这是一段测试文字")
                         .textColor(Color.WHITE)
-                        .animationGravity(BToast.ANIMATION_GRAVITY_RIGHT)
-                        .animate(true)
+                        .target(btn1)
+                        .layoutGravity(BToast.LAYOUT_GRAVITY_TOP)
+                        .relativeGravity(BToast.RELATIVE_GRAVITY_END)
+                        .sameLength(false)
                         .show();
             }
         });
@@ -36,7 +40,23 @@ public class MainActivity extends AppCompatActivity {
                         .text("这是一段测试文字")
                         .textColor(Color.WHITE)
                         .target(btn1)
-                        .relativeGravity(BToast.RELATIVE_GRAVITY_END)
+                        .layoutGravity(BToast.LAYOUT_GRAVITY_TOP)
+                        .relativeGravity(BToast.RELATIVE_GRAVITY_START)
+                        .sameLength(false)
+                        .show();
+            }
+        });
+
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BToast.success(v.getContext())
+                        .text("这是一段测试文字")
+                        .textColor(Color.WHITE)
+                        .target(btn1)
+                        .layoutGravity(BToast.LAYOUT_GRAVITY_TOP)
+                        .relativeGravity(BToast.RELATIVE_GRAVITY_CENTER)
+                        .sameLength(false)
                         .show();
             }
         });

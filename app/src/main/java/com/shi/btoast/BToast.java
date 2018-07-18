@@ -12,6 +12,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
+import android.text.Layout;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -162,72 +164,111 @@ public class BToast {
                         showStaticToast(toastDesc);
                     }
                 } else {
+                    View toastLayout = createToastLayout(view, toastDesc);
+                    WindowManager.LayoutParams lp
+                            = createWindowManagerLayoutParams(view, (ViewGroup) toastLayout, toastDesc);
 
-                    if (toastDesc.animate){
-//                        view.getLocationInWindow();
-                    }else {
+                    WindowManager windowManager = (WindowManager) view.getContext()
+                            .getSystemService(Context.WINDOW_SERVICE);
 
-                        View toastLayout = createToastLayout();
-                        WindowManager.LayoutParams lp = createWindowManagerLayoutParams(view, toastDesc);
+                    windowManager.addView(toastLayout, lp);
 
+                    currentToastView = new WeakReference<>(toastLayout);
 
-
-                        WindowManager windowManager = (WindowManager)view.getContext()
-                                .getSystemService(Context.WINDOW_SERVICE);
-
-//                        StyleLayout toastLayout = (StyleLayout) (LayoutInflater.from(app)
-//                                .inflate(R.layout.toast_layout_no_animation_style, null));
-
-//                        applyStyle(toastLayout, toastDesc);
-
-                        if (toastDesc.sameLength){
-
-                        }else {
-                            if (toastDesc.relativeGravity == RELATIVE_GRAVITY_CENTER){
-                                lp.gravity = Gravity.CENTER_HORIZONTAL | Gravity.TOP;
-                            }else if (toastDesc.relativeGravity == RELATIVE_GRAVITY_START){
-                            }else {
-                                RelativeLayout parent = new RelativeLayout(view.getContext());
-                                RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(
-                                        ViewGroup.LayoutParams.WRAP_CONTENT
-                                        , ViewGroup.LayoutParams.WRAP_CONTENT);
-                                rlp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                                rlp.addRule(RelativeLayout.CENTER_VERTICAL);
-                                toastLayout.setLayoutParams(rlp);
-                                parent.addView(toastLayout);
-
-                                lp.width = view.getMeasuredWidth();
-
-                                lp.gravity = Gravity.START | Gravity.TOP;
-
-                                lp.packageName = view.getContext().getPackageName();
-
-                                windowManager.addView(parent, lp);
-
-                                currentToastView = new WeakReference<View>(parent);
-
-                                view.postDelayed(removeViewRunnable, 3500);
-                            }
-                        }
-
-//                        lp.packageName = view.getContext().getPackageName();
-//                        windowManager.addView(toastLayout, lp);
-//
-//                        currentToastView = new WeakReference<View>(toastLayout);
-//
-//                        view.postDelayed(removeViewRunnable, 3500);
-                    }
+                    view.postDelayed(removeViewRunnable, 3500);
                 }
             }
         }
     }
 
-    private static View createToastLayout(){
+    private static View createToastLayout(View target, ToastDesc toastDesc) {
+        if (toastDesc.animate) {
+            if (toastDesc.sameLength){
+                AnimationLayout animationLayout = new AnimationLayout(target.getContext());
+                StyleLayout toastLayout = (StyleLayout) (LayoutInflater.from(app)
+                        .inflate(R.layout.toast_layout_no_animation_style, null));
+            }else {
+                View toastLayout = LayoutInflater.from(app)
+                        .inflate(R.layout.toast_layout_animate, null);
+                final AnimationLayout animationLayout = toastLayout.findViewById(R.id.al_layout);
+                final StyleLayout styleLayout = toastLayout.findViewById(R.id.toast_content);
+                setAnimationStyle(animationLayout, toastDesc);
+                applyStyle(styleLayout, toastDesc);
+                return toastLayout;
+            }
+        } else {
+            if (toastDesc.sameLength) {
+                StyleLayout toastLayout = (StyleLayout) (LayoutInflater.from(app)
+                        .inflate(R.layout.toast_layout_no_animation_style, null));
+                toastLayout.setStyle(StyleLayout.STYLE_RECTANGLE);
+                StyleLayout parent = new StyleLayout(target.getContext());
+                RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                        , ViewGroup.LayoutParams.WRAP_CONTENT);
+                int gravityRule;
+                if (toastDesc.layoutGravity == LAYOUT_GRAVITY_TOP
+                        || toastDesc.layoutGravity == LAYOUT_GRAVITY_BOTTOM) {
+                    if (toastDesc.relativeGravity == RELATIVE_GRAVITY_START) {
+                        gravityRule = RelativeLayout.ALIGN_PARENT_START;
+                    }else if (toastDesc.relativeGravity == RELATIVE_GRAVITY_END){
+                        gravityRule = RelativeLayout.ALIGN_PARENT_END;
+                    }else {
+                        gravityRule = RelativeLayout.CENTER_HORIZONTAL;
+                    }
+                }else if (toastDesc.layoutGravity == LAYOUT_GRAVITY_LEFT){
+                    rlp.addRule(RelativeLayout.ALIGN_PARENT_END);
+                    if (toastDesc.relativeGravity == RELATIVE_GRAVITY_START) {
+                        gravityRule = RelativeLayout.ALIGN_PARENT_TOP;
+                    }else if (toastDesc.relativeGravity == RELATIVE_GRAVITY_END){
+                        gravityRule = RelativeLayout.ALIGN_PARENT_BOTTOM;
+                    }else {
+                        gravityRule = RelativeLayout.CENTER_VERTICAL;
+                    }
+                }else {
+                    rlp.addRule(RelativeLayout.ALIGN_PARENT_START);
+                    if (toastDesc.relativeGravity == RELATIVE_GRAVITY_START) {
+                        gravityRule = RelativeLayout.ALIGN_PARENT_TOP;
+                    }else if (toastDesc.relativeGravity == RELATIVE_GRAVITY_END){
+                        gravityRule = RelativeLayout.ALIGN_PARENT_BOTTOM;
+                    }else {
+                        gravityRule = RelativeLayout.CENTER_VERTICAL;
+                    }
+                }
+                rlp.addRule(gravityRule);
+                parent.addView(toastLayout, rlp);
+                applyStyle(parent , toastDesc);
+                return parent;
+            } else {
+                // 无动画  not sameLength
+                StyleLayout toastLayout = (StyleLayout) (LayoutInflater.from(app)
+                        .inflate(R.layout.toast_layout_no_animation_style, null));
+                applyStyle(toastLayout, toastDesc);
+                if (toastDesc.relativeGravity == RELATIVE_GRAVITY_START){
+                    return toastLayout;
+                }
+                RelativeLayout parent = new RelativeLayout(target.getContext());
+                RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                        , ViewGroup.LayoutParams.WRAP_CONTENT);
+                int gravityRule;
+                if (toastDesc.relativeGravity == RELATIVE_GRAVITY_END){
+                    gravityRule = RelativeLayout.ALIGN_PARENT_END;
+                }else {
+                    gravityRule = RelativeLayout.CENTER_HORIZONTAL;
+                }
+                rlp.addRule(gravityRule);
+                Log.d("VY", "toastLayout: " + toastLayout.getMeasuredHeight());
+                parent.addView(toastLayout, rlp);
+                parent.measure(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                return parent;
+            }
+        }
+
         return null;
     }
 
-    private static WindowManager.LayoutParams createWindowManagerLayoutParams(View view,
-                                                                              ToastDesc toastDesc){
+    private static WindowManager.LayoutParams createWindowManagerLayoutParams(
+            View target, ViewGroup content, ToastDesc toastDesc) {
 
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
 
@@ -237,32 +278,67 @@ public class BToast {
                 | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         lp.format = PixelFormat.TRANSPARENT;
 
+        final int[] viewLocation = new int[2];
+        target.getLocationInWindow(viewLocation);
+
         lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-
-        final int[] viewLocation = new int[2];
-        view.getLocationInWindow(viewLocation);
-
-        if (toastDesc.sameLength){
-            switch (toastDesc.layoutGravity){
+        lp.gravity = Gravity.START | Gravity.TOP;
+        if (toastDesc.sameLength) {
+            switch (toastDesc.layoutGravity) {
                 case LAYOUT_GRAVITY_LEFT:
+                    lp.x = viewLocation[0] - content.getMeasuredWidth() + toastDesc.offsetX;
+                    lp.y = viewLocation[1] + toastDesc.offsetY;
+                    lp.height = target.getMeasuredHeight() + toastDesc.offsetH;
                     break;
                 case LAYOUT_GRAVITY_TOP:
-                    lp.gravity = Gravity.START | Gravity.RELATIVE_LAYOUT_DIRECTION;
                     lp.x = viewLocation[0] + toastDesc.offsetX;
-                    lp.y = viewLocation[1] - view.getMeasuredHeight() + toastDesc.offsetY;
+                    lp.y = viewLocation[1] - content.getMeasuredHeight() + toastDesc.offsetY;
+                    lp.width = target.getMeasuredWidth() + toastDesc.offsetW;
                     break;
                 case LAYOUT_GRAVITY_RIGHT:
+                    lp.x = viewLocation[0] + target.getMeasuredWidth() + toastDesc.offsetX;
+                    lp.y = viewLocation[1] + toastDesc.offsetY;
+                    lp.height = target.getMeasuredHeight() + toastDesc.offsetH;
                     break;
                 case LAYOUT_GRAVITY_BOTTOM:
-                    lp.gravity = Gravity.START | Gravity.TOP;
                     lp.x = viewLocation[0] + toastDesc.offsetX;
-                    lp.y = viewLocation[1] + view.getMeasuredHeight() + toastDesc.offsetY;
+                    lp.y = viewLocation[1] + target.getMeasuredHeight() + toastDesc.offsetY;
+                    lp.width = target.getMeasuredWidth() + toastDesc.offsetW;
                     break;
             }
-
-        }else {
-
+        } else {
+            switch (toastDesc.layoutGravity) {
+                case LAYOUT_GRAVITY_LEFT:
+                    lp.x = viewLocation[0] - content.getMeasuredWidth() + toastDesc.offsetX;
+                    lp.y = viewLocation[1] + toastDesc.offsetY;
+                    if (toastDesc.relativeGravity != RELATIVE_GRAVITY_START){
+                        lp.height = target.getMeasuredHeight() + toastDesc.offsetH;
+                    }
+                    break;
+                case LAYOUT_GRAVITY_TOP:
+                    lp.x = viewLocation[0] + toastDesc.offsetX;
+                    Log.d("VY", "content.getMeasuredHeight(): " + content.getChildAt(0).getMeasuredHeight());
+                    lp.y = viewLocation[1] - content.getMeasuredHeight() + toastDesc.offsetY;
+                    if (toastDesc.relativeGravity != RELATIVE_GRAVITY_START){
+                        lp.width = target.getMeasuredWidth() + toastDesc.offsetW;
+                    }
+                    break;
+                case LAYOUT_GRAVITY_RIGHT:
+                    lp.x = viewLocation[0] + target.getMeasuredWidth() + toastDesc.offsetX;
+                    lp.y = viewLocation[1] + toastDesc.offsetY;
+                    if (toastDesc.relativeGravity != RELATIVE_GRAVITY_START){
+                        lp.height = target.getMeasuredHeight() + toastDesc.offsetH;
+                    }
+                    break;
+                case LAYOUT_GRAVITY_BOTTOM:
+                    lp.x = viewLocation[0] + toastDesc.offsetX;
+                    lp.y = viewLocation[1] + target.getMeasuredHeight() + toastDesc.offsetY;
+                    if (toastDesc.relativeGravity != RELATIVE_GRAVITY_START){
+                        lp.width = target.getMeasuredWidth() + toastDesc.offsetW;
+                    }
+                    break;
+            }
         }
 
         return lp;
@@ -277,21 +353,15 @@ public class BToast {
         showToast(toastLayout);
     }
 
-    private static void showToast(View toastView){
+    private static void showToast(View toastView) {
         Toast toast = new Toast(app);
         toast.setView(toastView);
         toast.show();
     }
 
-    private static void showAnimationToast(ToastDesc toastDesc) {
-        View toastLayout = LayoutInflater.from(app)
-                .inflate(R.layout.toast_layout_animate, null);
-
-        final AnimationLayout animationLayout = toastLayout.findViewById(R.id.al_layout);
-        final StyleLayout styleLayout = toastLayout.findViewById(R.id.toast_content);
-
+    private static void setAnimationStyle(AnimationLayout animationLayout, ToastDesc toastDesc){
         int gravity;
-        switch (toastDesc.animationGravity){
+        switch (toastDesc.animationGravity) {
             case ANIMATION_GRAVITY_LEFT:
                 gravity = AnimationLayout.GRAVITY_LEFT;
                 break;
@@ -304,12 +374,22 @@ public class BToast {
             case ANIMATION_GRAVITY_BOTTOM:
                 gravity = AnimationLayout.GRAVITY_BOTTOM;
                 break;
-                default:
-                    throw new IllegalArgumentException("animateToast must set animate gravity!");
+            default:
+                throw new IllegalArgumentException("animateToast must set animate gravity!");
         }
 
         animationLayout.setAnimateGravity(gravity);
         animationLayout.setAnimDuration(toastDesc.animationDuration);
+    }
+
+    private static void showAnimationToast(ToastDesc toastDesc) {
+        View toastLayout = LayoutInflater.from(app)
+                .inflate(R.layout.toast_layout_animate, null);
+
+        final AnimationLayout animationLayout = toastLayout.findViewById(R.id.al_layout);
+        final StyleLayout styleLayout = toastLayout.findViewById(R.id.toast_content);
+
+        setAnimationStyle(animationLayout, toastDesc);
 
         applyStyle(styleLayout, toastDesc);
 
@@ -320,15 +400,15 @@ public class BToast {
         final ImageView toastIcon = styleLayout.findViewById(R.id.toast_icon);
         final TextView toastTextView = styleLayout.findViewById(R.id.toast_text);
         // icon
-        if (!toastDesc.showIcon || toastDesc.iconId == 0){
+        if (!toastDesc.showIcon || toastDesc.iconId == 0) {
             toastIcon.setVisibility(View.GONE);
         } else {
             toastIcon.setImageResource(toastDesc.iconId);
         }
         // text
-        if (!BToastUtils.isTrimEmpty(toastDesc.text)){
+        if (!BToastUtils.isTrimEmpty(toastDesc.text)) {
             toastTextView.setText(toastDesc.text);
-        } else if (toastDesc.textRes != 0){
+        } else if (toastDesc.textRes != 0) {
             toastTextView.setText(toastDesc.textRes);
         } else {
             throw new IllegalArgumentException("BToast must has one of text or textRes!");
@@ -338,7 +418,7 @@ public class BToast {
             toastTextView.setTextColor(toastDesc.textColor);
         }
         // textSize
-        if (toastDesc.textSize != 0){
+        if (toastDesc.textSize != 0) {
             toastTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, toastDesc.textSize);
         }
         // style tintColor
@@ -435,31 +515,31 @@ public class BToast {
         }
     }
 
-    public static ToastDesc normal(Context context){
+    public static ToastDesc normal(Context context) {
         return new ToastDesc(context.getClass().getSimpleName(), NORMAL_COLOR);
     }
 
-    public static ToastDesc warning(Context context){
+    public static ToastDesc warning(Context context) {
         return new ToastDesc(context.getClass().getSimpleName(),
                 WARNING_COLOR, R.drawable.ic_warning_outline_white);
     }
 
-    public static ToastDesc info(Context context){
+    public static ToastDesc info(Context context) {
         return new ToastDesc(context.getClass().getSimpleName(),
                 INFO_COLOR, R.drawable.ic_info_outline_white_48dp);
     }
 
-    public static ToastDesc success(Context context){
+    public static ToastDesc success(Context context) {
         return new ToastDesc(context.getClass().getSimpleName(),
                 SUCCESS_COLOR, R.drawable.ic_check_white_48dp);
     }
 
-    public static ToastDesc error(Context context){
+    public static ToastDesc error(Context context) {
         return new ToastDesc(context.getClass().getSimpleName(),
                 ERROR_COLOR, R.drawable.ic_error_outline_white_48dp);
     }
 
-    public static ToastDesc custom(Context context){
+    public static ToastDesc custom(Context context) {
         return new ToastDesc(context.getClass().getSimpleName());
     }
 
@@ -502,20 +582,24 @@ public class BToast {
 
         private int offsetY = 0;
 
+        private int offsetW = 0;
+
+        private int offsetH = 0;
+
         private boolean sameLength = false;
 
         private long animationDuration = DEFAULT_ANIMATION_DURATION;
 
-        ToastDesc(String className){
+        ToastDesc(String className) {
             this.className = className;
         }
 
-        ToastDesc(String className, int tintColor){
+        ToastDesc(String className, int tintColor) {
             this.className = className;
             this.tintColor = tintColor;
         }
 
-        ToastDesc(String className, int tintColor, int iconId){
+        ToastDesc(String className, int tintColor, int iconId) {
             this.className = className;
             this.tintColor = tintColor;
             this.iconId = iconId;
@@ -617,7 +701,7 @@ public class BToast {
             return this;
         }
 
-        public void show(){
+        public void show() {
             BToast.addToast(this);
         }
 
