@@ -20,6 +20,7 @@
     <Button
         android:id="@+id/btn1"
         android:text="success"
+        android:layout_marginLeft="100dp"
         android:scaleType="center"
         android:layout_width="match_parent"
         android:layout_height="50dp" />
@@ -33,7 +34,16 @@
 
     <View
         android:id="@+id/view"
+        android:layout_marginLeft="200dp"
         android:background="#DF5656"
+        android:layout_width="100dp"
+        android:layout_height="100dp"/>
+
+    <View
+        android:id="@+id/view1"
+        android:background="#DF5656"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="200dp"
         android:layout_width="100dp"
         android:layout_height="100dp"/>
 </LinearLayout>

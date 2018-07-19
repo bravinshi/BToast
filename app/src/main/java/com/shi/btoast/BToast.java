@@ -217,7 +217,6 @@ public class BToast {
                         gravityRule = RelativeLayout.CENTER_HORIZONTAL;
                     }
                 }else if (toastDesc.layoutGravity == LAYOUT_GRAVITY_LEFT){
-                    rlp.addRule(RelativeLayout.ALIGN_PARENT_END);
                     if (toastDesc.relativeGravity == RELATIVE_GRAVITY_START) {
                         gravityRule = RelativeLayout.ALIGN_PARENT_TOP;
                     }else if (toastDesc.relativeGravity == RELATIVE_GRAVITY_END){
@@ -226,7 +225,6 @@ public class BToast {
                         gravityRule = RelativeLayout.CENTER_VERTICAL;
                     }
                 }else {
-                    rlp.addRule(RelativeLayout.ALIGN_PARENT_START);
                     if (toastDesc.relativeGravity == RELATIVE_GRAVITY_START) {
                         gravityRule = RelativeLayout.ALIGN_PARENT_TOP;
                     }else if (toastDesc.relativeGravity == RELATIVE_GRAVITY_END){
@@ -255,9 +253,9 @@ public class BToast {
                         , ViewGroup.LayoutParams.WRAP_CONTENT);
                 int gravityRule;
                 if (toastDesc.relativeGravity == RELATIVE_GRAVITY_END){
-                    gravityRule = RelativeLayout.ALIGN_PARENT_END;
+                    gravityRule = RelativeLayout.ALIGN_PARENT_BOTTOM;
                 }else {
-                    gravityRule = RelativeLayout.CENTER_HORIZONTAL;
+                    gravityRule = RelativeLayout.CENTER_VERTICAL;
                 }
                 rlp.addRule(gravityRule);
                 parent.addView(toastLayout, rlp);
@@ -291,22 +289,26 @@ public class BToast {
         if (toastDesc.sameLength) {
             switch (toastDesc.layoutGravity) {
                 case LAYOUT_GRAVITY_LEFT:
+                    int measureSpecL = View.MeasureSpec.makeMeasureSpec(target.getMeasuredHeight() + toastDesc.offsetH, View.MeasureSpec.EXACTLY);
                     // measure is necessary
                     content.measure(ViewGroup.LayoutParams.WRAP_CONTENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT);
-                    lp.x = viewLocation[0] - content.getMeasuredWidth() + toastDesc.offsetX;
+                            measureSpecL);
+                    lp.x = viewLocation[0] - con.getChildAt(0).getMeasuredWidth() + toastDesc.offsetX;
                     lp.y = viewLocation[1] + toastDesc.offsetY;
                     lp.height = target.getMeasuredHeight() + toastDesc.offsetH;
                     break;
                 case LAYOUT_GRAVITY_TOP:
                     // measure is necessary
-                    content.measure(ViewGroup.LayoutParams.WRAP_CONTENT,
+                    int measureSpecT = View.MeasureSpec.makeMeasureSpec(target.getMeasuredWidth()
+                            + toastDesc.offsetW, View.MeasureSpec.EXACTLY);
+                    content.measure(measureSpecT,
                             ViewGroup.LayoutParams.WRAP_CONTENT);
                     lp.x = viewLocation[0] + toastDesc.offsetX;
                     lp.y = viewLocation[1] - content.getMeasuredHeight() + toastDesc.offsetY;
                     lp.width = target.getMeasuredWidth() + toastDesc.offsetW;
                     break;
                 case LAYOUT_GRAVITY_RIGHT:
+
                     lp.x = viewLocation[0] + target.getMeasuredWidth() + toastDesc.offsetX;
                     lp.y = viewLocation[1] + toastDesc.offsetY;
                     lp.height = target.getMeasuredHeight() + toastDesc.offsetH;
