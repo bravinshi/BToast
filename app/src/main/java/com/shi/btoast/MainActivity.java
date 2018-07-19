@@ -10,6 +10,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btn;
     private Button btn1;
     private Button btn2;
+    private View target;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,14 +20,15 @@ public class MainActivity extends AppCompatActivity {
         btn = findViewById(R.id.btn);
         btn1 = findViewById(R.id.btn1);
         btn2 = findViewById(R.id.btn2);
+        target = findViewById(R.id.view);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 BToast.success(v.getContext())
-                        .text("这是一段测试文字")
+                        .text("测试文字")
                         .textColor(Color.WHITE)
-                        .target(btn1)
-                        .layoutGravity(BToast.LAYOUT_GRAVITY_TOP)
+                        .target(target)
+                        .layoutGravity(BToast.LAYOUT_GRAVITY_LEFT)
                         .relativeGravity(BToast.RELATIVE_GRAVITY_END)
                         .sameLength(false)
                         .show();
@@ -37,12 +39,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 BToast.success(v.getContext())
-                        .text("这是一段测试文字")
+                        .text("测试文字")
                         .textColor(Color.WHITE)
-                        .target(btn1)
-                        .layoutGravity(BToast.LAYOUT_GRAVITY_TOP)
-                        .relativeGravity(BToast.RELATIVE_GRAVITY_START)
-                        .sameLength(false)
+                        .target(target)
+                        .layoutGravity(BToast.LAYOUT_GRAVITY_RIGHT)
+                        .relativeGravity(BToast.RELATIVE_GRAVITY_CENTER)
+                        .sameLength(true)
                         .show();
             }
         });
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
                         .target(btn1)
                         .layoutGravity(BToast.LAYOUT_GRAVITY_TOP)
                         .relativeGravity(BToast.RELATIVE_GRAVITY_CENTER)
-                        .sameLength(false)
+                        .sameLength(true)
                         .show();
             }
         });

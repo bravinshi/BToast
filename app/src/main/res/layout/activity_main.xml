@@ -30,4 +30,10 @@
         android:scaleType="center"
         android:layout_width="match_parent"
         android:layout_height="50dp" />
+
+    <View
+        android:id="@+id/view"
+        android:background="#DF5656"
+        android:layout_width="100dp"
+        android:layout_height="100dp"/>
 </LinearLayout>

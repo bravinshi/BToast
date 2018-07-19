@@ -166,7 +166,7 @@ public class BToast {
                 } else {
                     View toastLayout = createToastLayout(view, toastDesc);
                     WindowManager.LayoutParams lp
-                            = createWindowManagerLayoutParams(view, (ViewGroup) toastLayout, toastDesc);
+                            = createWindowManagerLayoutParams(view, toastLayout, toastDesc);
 
                     WindowManager windowManager = (WindowManager) view.getContext()
                             .getSystemService(Context.WINDOW_SERVICE);
@@ -200,6 +200,7 @@ public class BToast {
             if (toastDesc.sameLength) {
                 StyleLayout toastLayout = (StyleLayout) (LayoutInflater.from(app)
                         .inflate(R.layout.toast_layout_no_animation_style, null));
+                // 内层的view无需关注style，由外层的ViewGroup代理
                 toastLayout.setStyle(StyleLayout.STYLE_RECTANGLE);
                 StyleLayout parent = new StyleLayout(target.getContext());
                 RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(
@@ -236,6 +237,7 @@ public class BToast {
                 }
                 rlp.addRule(gravityRule);
                 parent.addView(toastLayout, rlp);
+                // ViewGroup代理style
                 applyStyle(parent , toastDesc);
                 return parent;
             } else {
@@ -243,6 +245,7 @@ public class BToast {
                 StyleLayout toastLayout = (StyleLayout) (LayoutInflater.from(app)
                         .inflate(R.layout.toast_layout_no_animation_style, null));
                 applyStyle(toastLayout, toastDesc);
+                // 无需用RelativeLayout包裹
                 if (toastDesc.relativeGravity == RELATIVE_GRAVITY_START){
                     return toastLayout;
                 }
@@ -257,9 +260,8 @@ public class BToast {
                     gravityRule = RelativeLayout.CENTER_HORIZONTAL;
                 }
                 rlp.addRule(gravityRule);
-                Log.d("VY", "toastLayout: " + toastLayout.getMeasuredHeight());
                 parent.addView(toastLayout, rlp);
-                parent.measure(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+
                 return parent;
             }
         }
@@ -268,7 +270,9 @@ public class BToast {
     }
 
     private static WindowManager.LayoutParams createWindowManagerLayoutParams(
-            View target, ViewGroup content, ToastDesc toastDesc) {
+            View target, View content, ToastDesc toastDesc) {
+
+        ViewGroup con = (ViewGroup) content;
 
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
 
@@ -287,11 +291,17 @@ public class BToast {
         if (toastDesc.sameLength) {
             switch (toastDesc.layoutGravity) {
                 case LAYOUT_GRAVITY_LEFT:
+                    // measure is necessary
+                    content.measure(ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
                     lp.x = viewLocation[0] - content.getMeasuredWidth() + toastDesc.offsetX;
                     lp.y = viewLocation[1] + toastDesc.offsetY;
                     lp.height = target.getMeasuredHeight() + toastDesc.offsetH;
                     break;
                 case LAYOUT_GRAVITY_TOP:
+                    // measure is necessary
+                    content.measure(ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
                     lp.x = viewLocation[0] + toastDesc.offsetX;
                     lp.y = viewLocation[1] - content.getMeasuredHeight() + toastDesc.offsetY;
                     lp.width = target.getMeasuredWidth() + toastDesc.offsetW;
@@ -310,15 +320,20 @@ public class BToast {
         } else {
             switch (toastDesc.layoutGravity) {
                 case LAYOUT_GRAVITY_LEFT:
-                    lp.x = viewLocation[0] - content.getMeasuredWidth() + toastDesc.offsetX;
+                    content.measure(ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
+                    Log.d("VY", content.getMeasuredHeight() + " / " + content.getMeasuredWidth());
+                    lp.x = viewLocation[0] - con.getChildAt(0).getMeasuredWidth() + toastDesc.offsetX;
+                    Log.d("VY", "lp.x: " + lp.x);
                     lp.y = viewLocation[1] + toastDesc.offsetY;
                     if (toastDesc.relativeGravity != RELATIVE_GRAVITY_START){
                         lp.height = target.getMeasuredHeight() + toastDesc.offsetH;
                     }
                     break;
                 case LAYOUT_GRAVITY_TOP:
+                    content.measure(ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
                     lp.x = viewLocation[0] + toastDesc.offsetX;
-                    Log.d("VY", "content.getMeasuredHeight(): " + content.getChildAt(0).getMeasuredHeight());
                     lp.y = viewLocation[1] - content.getMeasuredHeight() + toastDesc.offsetY;
                     if (toastDesc.relativeGravity != RELATIVE_GRAVITY_START){
                         lp.width = target.getMeasuredWidth() + toastDesc.offsetW;
