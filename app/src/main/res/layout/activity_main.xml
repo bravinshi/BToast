@@ -10,40 +10,90 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <Button
-    android:id="@+id/btn"
-    android:text="normal"
-    android:scaleType="center"
-    android:layout_width="match_parent"
-    android:layout_height="50dp" />
-
-    <Button
-        android:id="@+id/btn1"
-        android:text="success"
-        android:layout_marginLeft="100dp"
-        android:scaleType="center"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="200dp">
 
-    <Button
-        android:id="@+id/btn2"
-        android:text="success"
-        android:scaleType="center"
+        <View
+            android:id="@+id/view"
+            android:layout_centerInParent="true"
+            android:background="#DF5656"
+            android:layout_width="80dp"
+            android:layout_height="60dp"/>
+
+    </RelativeLayout>
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="match_parent">
 
-    <View
-        android:id="@+id/view"
-        android:layout_marginLeft="200dp"
-        android:background="#DF5656"
-        android:layout_width="100dp"
-        android:layout_height="100dp"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <View
-        android:id="@+id/view1"
-        android:background="#DF5656"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="200dp"
-        android:layout_width="100dp"
-        android:layout_height="100dp"/>
+            <Button
+                android:id="@+id/btn"
+                android:text="normal success"
+                android:layout_width="match_parent"
+                android:layout_height="50dp" />
+
+            <Button
+                android:id="@+id/btn1"
+                android:text="animate success"
+                android:layout_width="match_parent"
+                android:layout_height="50dp" />
+
+            <Button
+                android:id="@+id/btn2"
+                android:text="layout right success"
+                android:layout_width="match_parent"
+                android:layout_height="50dp" />
+
+            <Button
+                android:id="@+id/btn3"
+                android:text="layout top success"
+                android:layout_width="match_parent"
+                android:layout_height="50dp" />
+
+            <Button
+                android:id="@+id/btn4"
+                android:text="layout left success"
+                android:layout_width="match_parent"
+                android:layout_height="50dp" />
+
+            <Button
+                android:id="@+id/btn5"
+                android:text="layout bottom success"
+                android:layout_width="match_parent"
+                android:layout_height="50dp" />
+
+            <Button
+                android:id="@+id/btn6"
+                android:text="layout right samelength success"
+                android:layout_width="match_parent"
+                android:layout_height="50dp" />
+
+            <Button
+                android:id="@+id/btn7"
+                android:text="layout top samelength success"
+                android:layout_width="match_parent"
+                android:layout_height="50dp" />
+
+            <Button
+                android:id="@+id/btn8"
+                android:text="layout left samelength success"
+                android:layout_width="match_parent"
+                android:layout_height="50dp" />
+
+            <Button
+                android:id="@+id/btn9"
+                android:text="layout bottom samelength success"
+                android:layout_width="match_parent"
+                android:layout_height="50dp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
 </LinearLayout>

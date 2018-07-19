@@ -183,11 +183,11 @@ public class BToast {
 
     private static View createToastLayout(View target, ToastDesc toastDesc) {
         if (toastDesc.animate) {
-            if (toastDesc.sameLength){
+            if (toastDesc.sameLength) {
                 AnimationLayout animationLayout = new AnimationLayout(target.getContext());
                 StyleLayout toastLayout = (StyleLayout) (LayoutInflater.from(app)
                         .inflate(R.layout.toast_layout_no_animation_style, null));
-            }else {
+            } else {
                 View toastLayout = LayoutInflater.from(app)
                         .inflate(R.layout.toast_layout_animate, null);
                 final AnimationLayout animationLayout = toastLayout.findViewById(R.id.al_layout);
@@ -207,44 +207,37 @@ public class BToast {
                         ViewGroup.LayoutParams.WRAP_CONTENT
                         , ViewGroup.LayoutParams.WRAP_CONTENT);
                 int gravityRule;
+                // top bottom
                 if (toastDesc.layoutGravity == LAYOUT_GRAVITY_TOP
                         || toastDesc.layoutGravity == LAYOUT_GRAVITY_BOTTOM) {
                     if (toastDesc.relativeGravity == RELATIVE_GRAVITY_START) {
                         gravityRule = RelativeLayout.ALIGN_PARENT_START;
-                    }else if (toastDesc.relativeGravity == RELATIVE_GRAVITY_END){
+                    } else if (toastDesc.relativeGravity == RELATIVE_GRAVITY_END) {
                         gravityRule = RelativeLayout.ALIGN_PARENT_END;
-                    }else {
+                    } else {
                         gravityRule = RelativeLayout.CENTER_HORIZONTAL;
                     }
-                }else if (toastDesc.layoutGravity == LAYOUT_GRAVITY_LEFT){
+                } else {// left right
                     if (toastDesc.relativeGravity == RELATIVE_GRAVITY_START) {
                         gravityRule = RelativeLayout.ALIGN_PARENT_TOP;
-                    }else if (toastDesc.relativeGravity == RELATIVE_GRAVITY_END){
+                    } else if (toastDesc.relativeGravity == RELATIVE_GRAVITY_END) {
                         gravityRule = RelativeLayout.ALIGN_PARENT_BOTTOM;
-                    }else {
-                        gravityRule = RelativeLayout.CENTER_VERTICAL;
-                    }
-                }else {
-                    if (toastDesc.relativeGravity == RELATIVE_GRAVITY_START) {
-                        gravityRule = RelativeLayout.ALIGN_PARENT_TOP;
-                    }else if (toastDesc.relativeGravity == RELATIVE_GRAVITY_END){
-                        gravityRule = RelativeLayout.ALIGN_PARENT_BOTTOM;
-                    }else {
+                    } else {
                         gravityRule = RelativeLayout.CENTER_VERTICAL;
                     }
                 }
                 rlp.addRule(gravityRule);
                 parent.addView(toastLayout, rlp);
                 // ViewGroup代理style
-                applyStyle(parent , toastDesc);
+                applyStyle(parent, toastDesc);
                 return parent;
             } else {
-                // 无动画  not sameLength
+                // no animation  not sameLength
                 StyleLayout toastLayout = (StyleLayout) (LayoutInflater.from(app)
                         .inflate(R.layout.toast_layout_no_animation_style, null));
                 applyStyle(toastLayout, toastDesc);
                 // 无需用RelativeLayout包裹
-                if (toastDesc.relativeGravity == RELATIVE_GRAVITY_START){
+                if (toastDesc.relativeGravity == RELATIVE_GRAVITY_START) {
                     return toastLayout;
                 }
                 RelativeLayout parent = new RelativeLayout(target.getContext());
@@ -252,9 +245,9 @@ public class BToast {
                         ViewGroup.LayoutParams.WRAP_CONTENT
                         , ViewGroup.LayoutParams.WRAP_CONTENT);
                 int gravityRule;
-                if (toastDesc.relativeGravity == RELATIVE_GRAVITY_END){
+                if (toastDesc.relativeGravity == RELATIVE_GRAVITY_END) {
                     gravityRule = RelativeLayout.ALIGN_PARENT_BOTTOM;
-                }else {
+                } else {
                     gravityRule = RelativeLayout.CENTER_VERTICAL;
                 }
                 rlp.addRule(gravityRule);
@@ -269,9 +262,6 @@ public class BToast {
 
     private static WindowManager.LayoutParams createWindowManagerLayoutParams(
             View target, View content, ToastDesc toastDesc) {
-
-        ViewGroup con = (ViewGroup) content;
-
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
 
         lp.type = WindowManager.LayoutParams.TYPE_APPLICATION_PANEL;
@@ -289,11 +279,24 @@ public class BToast {
         if (toastDesc.sameLength) {
             switch (toastDesc.layoutGravity) {
                 case LAYOUT_GRAVITY_LEFT:
-                    int measureSpecL = View.MeasureSpec.makeMeasureSpec(target.getMeasuredHeight() + toastDesc.offsetH, View.MeasureSpec.EXACTLY);
+                    int measureSpecL = View.MeasureSpec.makeMeasureSpec(
+                            target.getMeasuredHeight() + toastDesc.offsetH,
+                            View.MeasureSpec.EXACTLY);
                     // measure is necessary
                     content.measure(ViewGroup.LayoutParams.WRAP_CONTENT,
                             measureSpecL);
-                    lp.x = viewLocation[0] - con.getChildAt(0).getMeasuredWidth() + toastDesc.offsetX;
+                    lp.x = viewLocation[0] - content.getMeasuredWidth() + toastDesc.offsetX;
+                    lp.y = viewLocation[1] + toastDesc.offsetY;
+                    lp.height = target.getMeasuredHeight() + toastDesc.offsetH;
+                    break;
+                case LAYOUT_GRAVITY_RIGHT:
+                    // measure is necessary
+                    int measureSpecR = View.MeasureSpec.makeMeasureSpec(
+                            target.getMeasuredHeight() + toastDesc.offsetH,
+                            View.MeasureSpec.EXACTLY);
+                    content.measure(ViewGroup.LayoutParams.WRAP_CONTENT,
+                            measureSpecR);
+                    lp.x = viewLocation[0] + target.getMeasuredWidth() + toastDesc.offsetX;
                     lp.y = viewLocation[1] + toastDesc.offsetY;
                     lp.height = target.getMeasuredHeight() + toastDesc.offsetH;
                     break;
@@ -307,13 +310,12 @@ public class BToast {
                     lp.y = viewLocation[1] - content.getMeasuredHeight() + toastDesc.offsetY;
                     lp.width = target.getMeasuredWidth() + toastDesc.offsetW;
                     break;
-                case LAYOUT_GRAVITY_RIGHT:
-
-                    lp.x = viewLocation[0] + target.getMeasuredWidth() + toastDesc.offsetX;
-                    lp.y = viewLocation[1] + toastDesc.offsetY;
-                    lp.height = target.getMeasuredHeight() + toastDesc.offsetH;
-                    break;
                 case LAYOUT_GRAVITY_BOTTOM:
+                    // measure is necessary
+                    int measureSpecB = View.MeasureSpec.makeMeasureSpec(target.getMeasuredWidth()
+                            + toastDesc.offsetW, View.MeasureSpec.EXACTLY);
+                    content.measure(measureSpecB,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
                     lp.x = viewLocation[0] + toastDesc.offsetX;
                     lp.y = viewLocation[1] + target.getMeasuredHeight() + toastDesc.offsetY;
                     lp.width = target.getMeasuredWidth() + toastDesc.offsetW;
@@ -324,11 +326,9 @@ public class BToast {
                 case LAYOUT_GRAVITY_LEFT:
                     content.measure(ViewGroup.LayoutParams.WRAP_CONTENT,
                             ViewGroup.LayoutParams.WRAP_CONTENT);
-                    Log.d("VY", content.getMeasuredHeight() + " / " + content.getMeasuredWidth());
-                    lp.x = viewLocation[0] - con.getChildAt(0).getMeasuredWidth() + toastDesc.offsetX;
-                    Log.d("VY", "lp.x: " + lp.x);
+                    lp.x = viewLocation[0] - content.getMeasuredWidth() + toastDesc.offsetX;
                     lp.y = viewLocation[1] + toastDesc.offsetY;
-                    if (toastDesc.relativeGravity != RELATIVE_GRAVITY_START){
+                    if (toastDesc.relativeGravity != RELATIVE_GRAVITY_START) {
                         lp.height = target.getMeasuredHeight() + toastDesc.offsetH;
                     }
                     break;
@@ -337,21 +337,21 @@ public class BToast {
                             ViewGroup.LayoutParams.WRAP_CONTENT);
                     lp.x = viewLocation[0] + toastDesc.offsetX;
                     lp.y = viewLocation[1] - content.getMeasuredHeight() + toastDesc.offsetY;
-                    if (toastDesc.relativeGravity != RELATIVE_GRAVITY_START){
+                    if (toastDesc.relativeGravity != RELATIVE_GRAVITY_START) {
                         lp.width = target.getMeasuredWidth() + toastDesc.offsetW;
                     }
                     break;
                 case LAYOUT_GRAVITY_RIGHT:
                     lp.x = viewLocation[0] + target.getMeasuredWidth() + toastDesc.offsetX;
                     lp.y = viewLocation[1] + toastDesc.offsetY;
-                    if (toastDesc.relativeGravity != RELATIVE_GRAVITY_START){
+                    if (toastDesc.relativeGravity != RELATIVE_GRAVITY_START) {
                         lp.height = target.getMeasuredHeight() + toastDesc.offsetH;
                     }
                     break;
                 case LAYOUT_GRAVITY_BOTTOM:
                     lp.x = viewLocation[0] + toastDesc.offsetX;
                     lp.y = viewLocation[1] + target.getMeasuredHeight() + toastDesc.offsetY;
-                    if (toastDesc.relativeGravity != RELATIVE_GRAVITY_START){
+                    if (toastDesc.relativeGravity != RELATIVE_GRAVITY_START) {
                         lp.width = target.getMeasuredWidth() + toastDesc.offsetW;
                     }
                     break;
@@ -376,7 +376,7 @@ public class BToast {
         toast.show();
     }
 
-    private static void setAnimationStyle(AnimationLayout animationLayout, ToastDesc toastDesc){
+    private static void setAnimationStyle(AnimationLayout animationLayout, ToastDesc toastDesc) {
         int gravity;
         switch (toastDesc.animationGravity) {
             case ANIMATION_GRAVITY_LEFT:

@@ -10,8 +10,15 @@ public class MainActivity extends AppCompatActivity {
     private Button btn;
     private Button btn1;
     private Button btn2;
+    private Button btn3;
+    private Button btn4;
+    private Button btn5;
+    private Button btn6;
+    private Button btn7;
+    private Button btn8;
+    private Button btn9;
+
     private View target;
-    private View target1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,16 +28,20 @@ public class MainActivity extends AppCompatActivity {
         btn = findViewById(R.id.btn);
         btn1 = findViewById(R.id.btn1);
         btn2 = findViewById(R.id.btn2);
+        btn3 = findViewById(R.id.btn3);
+        btn4 = findViewById(R.id.btn4);
+        btn5 = findViewById(R.id.btn5);
+        btn6 = findViewById(R.id.btn6);
+        btn7 = findViewById(R.id.btn7);
+        btn8 = findViewById(R.id.btn8);
+        btn9 = findViewById(R.id.btn9);
+
         target = findViewById(R.id.view);
-        target1 = findViewById(R.id.view1);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 BToast.success(v.getContext())
                         .text("测试文字")
-                        .animate(true)
-                        .animationGravity(BToast.ANIMATION_GRAVITY_LEFT)
-                        .textColor(Color.WHITE)
                         .show();
             }
         });
@@ -40,11 +51,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 BToast.success(v.getContext())
                         .text("测试文字")
-                        .textColor(Color.WHITE)
-                        .target(target)
-                        .layoutGravity(BToast.LAYOUT_GRAVITY_TOP)
-                        .relativeGravity(BToast.RELATIVE_GRAVITY_CENTER)
-                        .sameLength(true)
+                        .animate(true)
                         .show();
             }
         });
@@ -53,11 +60,89 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 BToast.success(v.getContext())
-                        .text("常常的文字字字字")
-                        .textColor(Color.WHITE)
-                        .target(target1)
+                        .text("请输入名称")
+                        .layoutGravity(BToast.LAYOUT_GRAVITY_RIGHT)
+                        .target(target)
+                        .show();
+            }
+        });
+
+        btn3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BToast.success(v.getContext())
+                        .text("字")
+                        .layoutGravity(BToast.LAYOUT_GRAVITY_TOP)
+                        .target(target)
+                        .show();
+            }
+        });
+
+        btn4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BToast.success(v.getContext())
+                        .text("测试文字")
                         .layoutGravity(BToast.LAYOUT_GRAVITY_LEFT)
-                        .relativeGravity(BToast.RELATIVE_GRAVITY_CENTER)
+                        .target(target)
+                        .show();
+            }
+        });
+
+        btn5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BToast.success(v.getContext())
+                        .text("测试文字")
+                        .layoutGravity(BToast.LAYOUT_GRAVITY_BOTTOM)
+                        .target(target)
+                        .show();
+            }
+        });
+
+        btn6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BToast.success(v.getContext())
+                        .text("请输入名称")
+                        .layoutGravity(BToast.LAYOUT_GRAVITY_RIGHT)
+                        .target(target)
+                        .sameLength(true)
+                        .show();
+            }
+        });
+
+        btn7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BToast.success(v.getContext())
+                        .text("字")
+                        .layoutGravity(BToast.LAYOUT_GRAVITY_TOP)
+                        .target(target)
+                        .sameLength(true)
+                        .show();
+            }
+        });
+
+        btn8.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BToast.success(v.getContext())
+                        .text("测试文字")
+                        .layoutGravity(BToast.LAYOUT_GRAVITY_LEFT)
+                        .target(target)
+                        .sameLength(true)
+                        .show();
+            }
+        });
+
+        btn9.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BToast.success(v.getContext())
+                        .text("测试文字")
+                        .layoutGravity(BToast.LAYOUT_GRAVITY_BOTTOM)
+                        .target(target)
                         .sameLength(true)
                         .show();
             }

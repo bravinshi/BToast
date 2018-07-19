@@ -11,7 +11,7 @@ import com.shi.btoast.BToastUtils;
  */
 public class StyleLayout extends RelativeLayout {
     private int radius;
-    private int style = STYLE_FILLET;
+    private int style = STYLE_RECTANGLE;
 
     public static final int STYLE_FILLET = 1;
     public static final int STYLE_RECTANGLE = 2;
