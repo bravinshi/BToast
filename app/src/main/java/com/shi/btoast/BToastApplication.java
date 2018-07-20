@@ -6,6 +6,7 @@ public class BToastApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        BToast.init(this);
+        BToast.Config.getInstance()
+                .apply(this);
     }
 }

@@ -12,8 +12,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
-import android.text.Layout;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -48,18 +46,21 @@ public class BToast {
     private static final int SHOW_TOAST = 1;
 
     public static final int LEVEL_CAN_REMOVE = 1;
-
     public static final int LEVEL_HOLD = 2;
+
+    public static int LEVEL = LEVEL_CAN_REMOVE;
 
     private static boolean canNotify = true;
 
     private static final int DURATION_SHORT = 2000;
     private static final int DURATION_LONG = 3500;
 
-    private static final int DEFAULT_ANIMATION_DURATION = 800;
+    private static int DEFAULT_DURATION = BToast.DURATION_SHORT;
+
+    private static int ANIMATION_DURATION = 800;
 
     @ColorInt
-    private static int DEFAULT_TEXT_COLOR = Color.parseColor("#FFFFFF");
+    private static int TEXT_COLOR = Color.parseColor("#FFFFFF");
     @ColorInt
     private static int ERROR_COLOR = Color.parseColor("#D50000");
     @ColorInt
@@ -71,22 +72,38 @@ public class BToast {
     @ColorInt
     private static int NORMAL_COLOR = Color.parseColor("#353A3E");
 
+    private static int TEXT_SIZE = 16;// sp
+
+    private static boolean SHOW_ICON = true;
+    private static boolean ANIMATE = false;
+    private static boolean SAME_LENGTH = false;
+
     public static final int ANIMATION_GRAVITY_LEFT = 10;
     public static final int ANIMATION_GRAVITY_TOP = 20;
     public static final int ANIMATION_GRAVITY_RIGHT = 30;
     public static final int ANIMATION_GRAVITY_BOTTOM = 40;
+
+    private static int ANIMATION_GRAVITY = ANIMATION_GRAVITY_TOP;
 
     public static final int LAYOUT_GRAVITY_LEFT = 1;
     public static final int LAYOUT_GRAVITY_TOP = 2;
     public static final int LAYOUT_GRAVITY_RIGHT = 3;
     public static final int LAYOUT_GRAVITY_BOTTOM = 4;
 
+    private static int LAYOUT_GRAVITY = LAYOUT_GRAVITY_BOTTOM;
+
     public static final int STYLE_FILLET = 100;
     public static final int STYLE_RECTANGLE = 200;
+
+    private static int WITH_TARGET_BACKGROUND_STYLE = STYLE_RECTANGLE;
+    private static int NO_TARGET_BACKGROUND_STYLE = STYLE_FILLET;
+
 
     public static final int RELATIVE_GRAVITY_START = 1;
     public static final int RELATIVE_GRAVITY_END = 2;
     public static final int RELATIVE_GRAVITY_CENTER = 3;
+
+    private static int RELATIVE_GRAVITY = RELATIVE_GRAVITY_CENTER;
 
     private static WeakReference<View> currentToastView;
 
@@ -435,9 +452,7 @@ public class BToast {
             toastTextView.setTextColor(toastDesc.textColor);
         }
         // textSize
-        if (toastDesc.textSize != 0) {
-            toastTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, toastDesc.textSize);
-        }
+        toastTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, toastDesc.textSize);
         // style tintColor
         styleLayout.setStyle(toastDesc.style == STYLE_RECTANGLE ?
                 StyleLayout.STYLE_RECTANGLE : StyleLayout.STYLE_FILLET);
@@ -567,9 +582,9 @@ public class BToast {
 
         private int textRes = 0;
 
-        private int duration = DURATION_SHORT;
+        private int duration = BToast.DEFAULT_DURATION;
 
-        private int level = LEVEL_CAN_REMOVE;
+        private int level = BToast.LEVEL;
 
         @ColorInt
         private int tintColor = 0;
@@ -577,23 +592,24 @@ public class BToast {
         @DrawableRes
         private int iconId = 0;
 
-        private boolean showIcon = true;
+        private boolean showIcon = BToast.SHOW_ICON;
 
-        private boolean animate = false;
+        private boolean animate = BToast.ANIMATE;
 
-        private int animationGravity = BToast.ANIMATION_GRAVITY_TOP;
         @ColorInt
-        private int textColor = DEFAULT_TEXT_COLOR;
+        private int textColor = BToast.TEXT_COLOR;
 
         private WeakReference<View> target = null;
 
-        private int textSize = 0;
+        private int textSize = BToast.TEXT_SIZE;
 
         private int style = STYLE_FILLET;
 
-        private int layoutGravity = LAYOUT_GRAVITY_BOTTOM;
+        private int animationGravity = BToast.ANIMATION_GRAVITY;
 
-        private int relativeGravity = RELATIVE_GRAVITY_CENTER;
+        private int layoutGravity = BToast.LAYOUT_GRAVITY;
+
+        private int relativeGravity = BToast.RELATIVE_GRAVITY;
 
         private int offsetX = 0;
 
@@ -603,9 +619,9 @@ public class BToast {
 
         private int offsetH = 0;
 
-        private boolean sameLength = false;
+        private boolean sameLength = BToast.SAME_LENGTH;
 
-        private long animationDuration = DEFAULT_ANIMATION_DURATION;
+        private long animationDuration = BToast.ANIMATION_DURATION;
 
         ToastDesc(String className) {
             this.className = className;
@@ -727,6 +743,157 @@ public class BToast {
                 return null;
             }
             return target.get();
+        }
+    }
+
+    static class Config {
+        private int duration = BToast.DEFAULT_DURATION;
+
+        private int successColor = BToast.SUCCESS_COLOR;
+
+        private int errorColor = BToast.ERROR_COLOR;
+
+        private int infoColor = BToast.INFO_COLOR;
+
+        private int warningColor = BToast.WARNING_COLOR;
+
+        private int textColor = BToast.TEXT_COLOR;
+
+        private boolean showIcon = BToast.SHOW_ICON;
+
+        private boolean animate = BToast.ANIMATE;
+
+        private boolean sameLength = BToast.SAME_LENGTH;
+
+        private int textSize = BToast.TEXT_SIZE;
+
+        private int layoutGravity = BToast.LAYOUT_GRAVITY;
+
+        private int animationGravity = BToast.ANIMATION_GRAVITY;
+
+        private int relativeGravity = BToast.RELATIVE_GRAVITY;
+
+        private int animationDuration = BToast.ANIMATION_DURATION;
+
+        private int withTargetBackgroundStyle = BToast.WITH_TARGET_BACKGROUND_STYLE;
+
+        private int noTargetBackgroundStyle = BToast.NO_TARGET_BACKGROUND_STYLE;
+
+        private int level = BToast.LEVEL;
+
+        private Config() {
+
+        }
+
+        public static Config getInstance() {
+            return new Config();
+        }
+
+        public Config setDuration(int duration) {
+            this.duration = duration;
+            return this;
+        }
+
+        public Config setSuccessColor(int successColor) {
+            this.successColor = successColor;
+            return this;
+        }
+
+        public Config setErrorColor(int errorColor) {
+            this.errorColor = errorColor;
+            return this;
+        }
+
+        public Config setInfoColor(int infoColor) {
+            this.infoColor = infoColor;
+            return this;
+        }
+
+        public Config setWarningColor(int warningColor) {
+            this.warningColor = warningColor;
+            return this;
+        }
+
+        public Config setTextColor(int textColor) {
+            this.textColor = textColor;
+            return this;
+        }
+
+        public Config setShowIcon(boolean showIcon) {
+            this.showIcon = showIcon;
+            return this;
+        }
+
+        public Config setAnimate(boolean animate) {
+            this.animate = animate;
+            return this;
+        }
+
+        public Config setSameLength(boolean sameLength) {
+            this.sameLength = sameLength;
+            return this;
+        }
+
+        public Config setTextSize(int textSize) {
+            this.textSize = textSize;
+            return this;
+        }
+
+        public Config setLayoutGravity(int layoutGravity) {
+            this.layoutGravity = layoutGravity;
+            return this;
+        }
+
+        public Config setAnimationGravity(int animationGravity) {
+            this.animationGravity = animationGravity;
+            return this;
+        }
+
+        public Config setRelativeGravity(int relativeGravity) {
+            this.relativeGravity = relativeGravity;
+            return this;
+        }
+
+        public Config setAnimationDuration(int animationDuration) {
+            this.animationDuration = animationDuration;
+            return this;
+        }
+
+        public Config setWithTargetBackgroundStyle(int withTargetBackgroundStyle) {
+            this.withTargetBackgroundStyle = withTargetBackgroundStyle;
+            return this;
+        }
+
+        public Config setNoTargetBackgroundStyle(int noTargetBackgroundStyle) {
+            this.noTargetBackgroundStyle = noTargetBackgroundStyle;
+            return this;
+        }
+
+        public Config setLevel(int level){
+            this.level = level;
+            return this;
+        }
+
+        public void apply(Application app) {
+            BToast.DEFAULT_DURATION = duration;
+            BToast.SUCCESS_COLOR = successColor;
+            BToast.ERROR_COLOR = errorColor;
+            BToast.INFO_COLOR = infoColor;
+            BToast.WARNING_COLOR = warningColor;
+            BToast.TEXT_COLOR = textColor;
+            BToast.SHOW_ICON = showIcon;
+            BToast.ANIMATE = animate;
+            BToast.SAME_LENGTH = sameLength;
+            BToast.TEXT_SIZE = textSize;
+            BToast.LAYOUT_GRAVITY = layoutGravity;
+            BToast.ANIMATION_GRAVITY = animationGravity;
+            BToast.RELATIVE_GRAVITY = relativeGravity;
+            BToast.ANIMATION_DURATION = animationDuration;
+            BToast.WITH_TARGET_BACKGROUND_STYLE = withTargetBackgroundStyle;
+            BToast.NO_TARGET_BACKGROUND_STYLE = noTargetBackgroundStyle;
+            BToast.LEVEL = level;
+
+            BToast.init(app);
         }
     }
 
