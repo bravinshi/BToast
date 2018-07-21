@@ -94,11 +94,11 @@ public class BToast {
 
     private static int LAYOUT_GRAVITY = LAYOUT_GRAVITY_BOTTOM;
 
-    public static final int STYLE_FILLET = 100;
-    public static final int STYLE_RECTANGLE = 200;
+//    public static final int STYLE_FILLET = 100;
+//    public static final int STYLE_RECTANGLE = 200;
 
-    private static int WITH_TARGET_BACKGROUND_STYLE = STYLE_RECTANGLE;
-    private static int NO_TARGET_BACKGROUND_STYLE = STYLE_FILLET;
+//    private static int WITH_TARGET_BACKGROUND_STYLE = STYLE_RECTANGLE;
+//    private static int NO_TARGET_BACKGROUND_STYLE = STYLE_FILLET;
 
 
     public static final int RELATIVE_GRAVITY_START = 1;
@@ -106,6 +106,10 @@ public class BToast {
     public static final int RELATIVE_GRAVITY_CENTER = 3;
 
     private static int RELATIVE_GRAVITY = RELATIVE_GRAVITY_CENTER;
+
+    public static final int RADIUS_HALF_OF_HEIGHT = -1;
+
+    private static int RADIUS = RADIUS_HALF_OF_HEIGHT;
 
     private static WeakReference<View> currentToastView;
 
@@ -279,7 +283,7 @@ public class BToast {
                 StyleLayout toastLayout = (StyleLayout) (LayoutInflater.from(app)
                         .inflate(R.layout.toast_layout_no_animation_style, null));
                 // 内层的view无需关注style，由外层的ViewGroup代理
-                toastLayout.setStyle(StyleLayout.STYLE_RECTANGLE);
+                toastLayout.setRadius(0);
                 StyleLayout parent = new StyleLayout(target.getContext());
                 RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT
@@ -532,8 +536,9 @@ public class BToast {
         // textSize
         toastTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, toastDesc.textSize);
         // style tintColor
-        styleLayout.setStyle(toastDesc.style == STYLE_RECTANGLE ?
-                StyleLayout.STYLE_RECTANGLE : StyleLayout.STYLE_FILLET);
+        styleLayout.setRadius(toastDesc.radius);
+//        styleLayout.setStyle(toastDesc.style == STYLE_RECTANGLE ?
+//                StyleLayout.STYLE_RECTANGLE : StyleLayout.STYLE_FILLET);
         styleLayout.setTintColor(toastDesc.tintColor);
     }
 
@@ -681,7 +686,7 @@ public class BToast {
 
         private int textSize = BToast.TEXT_SIZE;
 
-        private int style = STYLE_FILLET;
+//        private int style = STYLE_FILLET;
 
         private int animationGravity = BToast.ANIMATION_GRAVITY;
 
@@ -700,6 +705,8 @@ public class BToast {
         private boolean sameLength = BToast.SAME_LENGTH;
 
         private long animationDuration = BToast.ANIMATION_DURATION;
+
+        private int radius = BToast.RADIUS;
 
         ToastDesc(String className) {
             this.className = className;
@@ -792,10 +799,10 @@ public class BToast {
             return this;
         }
 
-        public ToastDesc style(int style) {
-            this.style = style;
-            return this;
-        }
+//        public ToastDesc style(int style) {
+//            this.style = style;
+//            return this;
+//        }
 
         public ToastDesc animationDuration(int animationDuration) {
             this.animationDuration = animationDuration;
@@ -809,6 +816,11 @@ public class BToast {
 
         public ToastDesc target(View view) {
             this.target = new WeakReference<>(view);
+            return this;
+        }
+
+        public ToastDesc radius(int radius){
+            this.radius = radius;
             return this;
         }
 
@@ -853,11 +865,13 @@ public class BToast {
 
         private int animationDuration = BToast.ANIMATION_DURATION;
 
-        private int withTargetBackgroundStyle = BToast.WITH_TARGET_BACKGROUND_STYLE;
-
-        private int noTargetBackgroundStyle = BToast.NO_TARGET_BACKGROUND_STYLE;
+//        private int withTargetBackgroundStyle = BToast.WITH_TARGET_BACKGROUND_STYLE;
+//
+//        private int noTargetBackgroundStyle = BToast.NO_TARGET_BACKGROUND_STYLE;
 
         private int level = BToast.LEVEL;
+
+        private int radius = BToast.RADIUS;
 
         private Config() {
 
@@ -937,18 +951,23 @@ public class BToast {
             return this;
         }
 
-        public Config setWithTargetBackgroundStyle(int withTargetBackgroundStyle) {
-            this.withTargetBackgroundStyle = withTargetBackgroundStyle;
-            return this;
-        }
-
-        public Config setNoTargetBackgroundStyle(int noTargetBackgroundStyle) {
-            this.noTargetBackgroundStyle = noTargetBackgroundStyle;
-            return this;
-        }
+//        public Config setWithTargetBackgroundStyle(int withTargetBackgroundStyle) {
+//            this.withTargetBackgroundStyle = withTargetBackgroundStyle;
+//            return this;
+//        }
+//
+//        public Config setNoTargetBackgroundStyle(int noTargetBackgroundStyle) {
+//            this.noTargetBackgroundStyle = noTargetBackgroundStyle;
+//            return this;
+//        }
 
         public Config setLevel(int level){
             this.level = level;
+            return this;
+        }
+
+        public Config setRadius(int radius){
+            this.radius = radius;
             return this;
         }
 
@@ -967,9 +986,10 @@ public class BToast {
             BToast.ANIMATION_GRAVITY = animationGravity;
             BToast.RELATIVE_GRAVITY = relativeGravity;
             BToast.ANIMATION_DURATION = animationDuration;
-            BToast.WITH_TARGET_BACKGROUND_STYLE = withTargetBackgroundStyle;
-            BToast.NO_TARGET_BACKGROUND_STYLE = noTargetBackgroundStyle;
+//            BToast.WITH_TARGET_BACKGROUND_STYLE = withTargetBackgroundStyle;
+//            BToast.NO_TARGET_BACKGROUND_STYLE = noTargetBackgroundStyle;
             BToast.LEVEL = level;
+            BToast.RADIUS = radius;
 
             BToast.init(app);
         }

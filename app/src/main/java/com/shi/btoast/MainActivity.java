@@ -41,11 +41,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 BToast.success(v.getContext())
-                        .layoutGravity(BToast.LAYOUT_GRAVITY_LEFT)
-                        .animate(true)
-                        .sameLength(true)
-                        .target(target)
                         .text("测试文字")
+                        .radius(0)
                         .show();
             }
         });
