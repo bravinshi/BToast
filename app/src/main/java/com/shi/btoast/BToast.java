@@ -30,6 +30,8 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.function.Predicate;
 
 /**
@@ -52,8 +54,8 @@ public class BToast {
 
     private static boolean canNotify = true;
 
-    private static final int DURATION_SHORT = 2000;
-    private static final int DURATION_LONG = 3500;
+    private static final int DURATION_SHORT = 3000;
+    private static final int DURATION_LONG = 4500;
 
     private static int DEFAULT_DURATION = BToast.DURATION_SHORT;
 
@@ -122,6 +124,7 @@ public class BToast {
         removeViewRunnable = new Runnable() {
             @Override
             public void run() {
+                canNotify = true;
                 if (currentToastView != null && currentToastView.get() != null) {
                     View view = currentToastView.get();
                     WindowManager windowManager =
@@ -146,19 +149,20 @@ public class BToast {
                             message.obj = toastDesc;
                             subThreadHandler.sendMessage(message);
                             canNotify = false;
-                            try {
-                                toasts.wait(toastDesc.duration ==
-                                        Toast.LENGTH_SHORT ? DURATION_SHORT : DURATION_LONG);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+//                            try {
+//                                toasts.wait(toastDesc.duration ==
+//                                        Toast.LENGTH_SHORT ? DURATION_SHORT : DURATION_LONG);
+//                            } catch (InterruptedException e) {
+//                                e.printStackTrace();
+//                            }
                         } else {
                             canNotify = true;
-                            try {
-                                toasts.wait();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+                        }
+
+                        try {
+                            toasts.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
                     }
                 }
@@ -384,13 +388,20 @@ public class BToast {
 
         applyStyle(toastLayout, toastDesc);
 
-        showToast(toastLayout);
+        showToast(toastLayout, toastDesc.duration);
     }
 
-    private static void showToast(View toastView) {
+    private static void showToast(View toastView, int duration) {
         Toast toast = new Toast(app);
         toast.setView(toastView);
         toast.show();
+        long delay = duration == DURATION_SHORT ? DURATION_SHORT + 100 : DURATION_LONG + 100;
+        new Timer().schedule(new TimerTask(){
+            @Override
+            public void run() {
+                canNotify = true;
+            }
+        }, duration);
     }
 
     private static void setAnimationStyle(AnimationLayout animationLayout, ToastDesc toastDesc) {
@@ -427,7 +438,7 @@ public class BToast {
 
         applyStyle(styleLayout, toastDesc);
 
-        showToast(toastLayout);
+        showToast(toastLayout, toastDesc.duration);
     }
 
     private static void applyStyle(StyleLayout styleLayout, ToastDesc toastDesc) {
