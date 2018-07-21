@@ -1,11 +1,11 @@
-package com.shi.btoast.view;
+package com.bravin.btoast.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
-import com.shi.btoast.BToast;
-import com.shi.btoast.BToastUtils;
+import com.bravin.btoast.BToast;
+import com.bravin.btoast.BToastUtils;
 
 /**
  * created by bravin on 2018/7/17.

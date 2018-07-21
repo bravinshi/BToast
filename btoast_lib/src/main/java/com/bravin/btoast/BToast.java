@@ -1,4 +1,4 @@
-package com.shi.btoast;
+package com.bravin.btoast;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -23,15 +23,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.shi.btoast.view.AnimationLayout;
-import com.shi.btoast.view.StyleLayout;
+import com.bravin.btoast.view.AnimationLayout;
+import com.bravin.btoast.view.StyleLayout;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.function.Predicate;
 
 /**
@@ -41,18 +39,15 @@ public class BToast {
 
     private static Application app;
 
-    private static Handler subThreadHandler;
+    private static Handler mainThreadHandler;
 
     private static final ArrayList<ToastDesc> toasts = new ArrayList<>();
 
     private static final int SHOW_TOAST = 1;
+    private static final int FINISH_NO_TARGET_TOAST = 2;
+    private static final int FINISH_WITH_TARGET_TOAST = 3;
 
-    public static final int LEVEL_CAN_REMOVE = 1;
-    public static final int LEVEL_HOLD = 2;
-
-    public static int LEVEL = LEVEL_CAN_REMOVE;
-
-    private static boolean canNotify = true;
+    private static boolean canNotify = false;
 
     private static final int DURATION_SHORT = 3000;
     private static final int DURATION_LONG = 4500;
@@ -94,13 +89,6 @@ public class BToast {
 
     private static int LAYOUT_GRAVITY = LAYOUT_GRAVITY_BOTTOM;
 
-//    public static final int STYLE_FILLET = 100;
-//    public static final int STYLE_RECTANGLE = 200;
-
-//    private static int WITH_TARGET_BACKGROUND_STYLE = STYLE_RECTANGLE;
-//    private static int NO_TARGET_BACKGROUND_STYLE = STYLE_FILLET;
-
-
     public static final int RELATIVE_GRAVITY_START = 1;
     public static final int RELATIVE_GRAVITY_END = 2;
     public static final int RELATIVE_GRAVITY_CENTER = 3;
@@ -113,31 +101,15 @@ public class BToast {
 
     private static WeakReference<View> currentToastView;
 
-    private static Runnable removeViewRunnable;
-
     private BToast() {
         throw new UnsupportedOperationException("u can't instantiate me...");
     }
 
     public static void init(final Application app) {
         BToast.app = app;
-        subThreadHandler = new SubThreadHandler();
+        mainThreadHandler = new MainThreadHandler();
         app.registerActivityLifecycleCallbacks(new ActivityLifecycleImpl());
         runAgentThread();// 启动代理线程
-
-        removeViewRunnable = new Runnable() {
-            @Override
-            public void run() {
-                canNotify = true;
-                if (currentToastView != null && currentToastView.get() != null) {
-                    View view = currentToastView.get();
-                    WindowManager windowManager =
-                            (WindowManager) view.getContext().getSystemService(Context.WINDOW_SERVICE);
-                    windowManager.removeView(view);
-                }
-            }
-        };
-
     }
 
     private static void runAgentThread() {
@@ -147,18 +119,12 @@ public class BToast {
                 for (; ; ) {
                     synchronized (toasts) {
                         if (toasts.size() > 0) {
-                            ToastDesc toastDesc = toasts.remove(toasts.size() - 1);
+                            ToastDesc toastDesc = toasts.remove(0);
                             Message message = Message.obtain();
                             message.what = SHOW_TOAST;
                             message.obj = toastDesc;
-                            subThreadHandler.sendMessage(message);
+                            mainThreadHandler.sendMessage(message);
                             canNotify = false;
-//                            try {
-//                                toasts.wait(toastDesc.duration ==
-//                                        Toast.LENGTH_SHORT ? DURATION_SHORT : DURATION_LONG);
-//                            } catch (InterruptedException e) {
-//                                e.printStackTrace();
-//                            }
                         } else {
                             canNotify = true;
                         }
@@ -174,7 +140,7 @@ public class BToast {
         }).start();
     }
 
-    private static class SubThreadHandler extends Handler {
+    private static class MainThreadHandler extends Handler {
         @SuppressLint("WrongConstant")
         @Override
         public void handleMessage(Message msg) {
@@ -198,8 +164,23 @@ public class BToast {
                     windowManager.addView(toastLayout, lp);
 
                     currentToastView = new WeakReference<>(toastLayout);
+                    long delay = toastDesc.duration == DURATION_SHORT ? DURATION_SHORT : DURATION_LONG;
+                    mainThreadHandler.sendEmptyMessageDelayed(FINISH_WITH_TARGET_TOAST, delay);
+                }
+            }else if (msg.what == FINISH_NO_TARGET_TOAST) {
+                synchronized (toasts){
+                    toasts.notifyAll();
+                }
+            } else {
+                if (currentToastView != null && currentToastView.get() != null) {
+                    View view = currentToastView.get();
+                    WindowManager windowManager =
+                            (WindowManager) view.getContext().getSystemService(Context.WINDOW_SERVICE);
+                    windowManager.removeView(view);
+                }
 
-                    view.postDelayed(removeViewRunnable, 3500);
+                synchronized (toasts){
+                    toasts.notifyAll();
                 }
             }
         }
@@ -228,9 +209,9 @@ public class BToast {
 
                     if (toastDesc.relativeGravity == RELATIVE_GRAVITY_START) {
                         relativeGravity = RelativeLayout.ALIGN_PARENT_TOP;
-                    } else if (toastDesc.relativeGravity == RELATIVE_GRAVITY_CENTER){
+                    } else if (toastDesc.relativeGravity == RELATIVE_GRAVITY_CENTER) {
                         relativeGravity = RelativeLayout.CENTER_HORIZONTAL;
-                    }else {
+                    } else {
                         relativeGravity = RelativeLayout.ALIGN_PARENT_BOTTOM;
                     }
                 } else {
@@ -239,9 +220,9 @@ public class BToast {
 
                     if (toastDesc.relativeGravity == RELATIVE_GRAVITY_START) {
                         relativeGravity = RelativeLayout.ALIGN_PARENT_START;
-                    } else if (toastDesc.relativeGravity == RELATIVE_GRAVITY_CENTER){
+                    } else if (toastDesc.relativeGravity == RELATIVE_GRAVITY_CENTER) {
                         relativeGravity = RelativeLayout.CENTER_VERTICAL;
-                    }else {
+                    } else {
                         relativeGravity = RelativeLayout.ALIGN_PARENT_END;
                     }
                 }
@@ -466,13 +447,9 @@ public class BToast {
         Toast toast = new Toast(app);
         toast.setView(toastView);
         toast.show();
-        long delay = duration == DURATION_SHORT ? DURATION_SHORT + 100 : DURATION_LONG + 100;
-        new Timer().schedule(new TimerTask(){
-            @Override
-            public void run() {
-                canNotify = true;
-            }
-        }, duration);
+
+        long delay = duration == DURATION_SHORT ? DURATION_SHORT : DURATION_LONG;
+        mainThreadHandler.sendEmptyMessageDelayed(FINISH_NO_TARGET_TOAST, delay);
     }
 
     private static void setAnimationStyle(AnimationLayout animationLayout, ToastDesc toastDesc) {
@@ -537,8 +514,6 @@ public class BToast {
         toastTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, toastDesc.textSize);
         // style tintColor
         styleLayout.setRadius(toastDesc.radius);
-//        styleLayout.setStyle(toastDesc.style == STYLE_RECTANGLE ?
-//                StyleLayout.STYLE_RECTANGLE : StyleLayout.STYLE_FILLET);
         styleLayout.setTintColor(toastDesc.tintColor);
     }
 
@@ -548,69 +523,45 @@ public class BToast {
      * @param context Context类名
      */
     private static void remove(Context context) {
-        remove(context.getClass().getSimpleName(), true);
+        remove(context.getClass().getSimpleName(),true, 0);
     }
 
     /**
      * 移除某一个Context中提交的可移除的toast
      *
-     * @param context         Context 类名
-     * @param removeHoldToast 是否移除HOLDER等级的toast
+     * @param context Context 类名
+     * @param tag tag
      */
-    private static void remove(Context context, boolean removeHoldToast) {
-        remove(context.getClass().getSimpleName(), removeHoldToast);
+    private static void remove(Context context, int tag) {
+        remove(context.getClass().getSimpleName(), false, tag);
+    }
+
+    private static void remove(String className, int tag) {
+        remove(className, false, tag);
     }
 
     /**
      * 移除某一个Context中提交的可移除的toast
      *
      * @param name Context类名
+     * @param removeAll 是否移除对应类名中的所有toast
+     * @param tag tag
      */
-    private static void remove(final String name, final boolean removeHoldToast) {
+    private static void remove(final String name, final boolean removeAll, final int tag) {
         synchronized (toasts) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 toasts.removeIf(new Predicate<ToastDesc>() {
                     @Override
                     public boolean test(ToastDesc toastDesc) {
                         return toastDesc.className.equals(name) &&
-                                (removeHoldToast || toastDesc.level == LEVEL_CAN_REMOVE);
+                                (removeAll || toastDesc.tag == tag);
                     }
                 });
             } else {
                 Set<ToastDesc> removeSet = new HashSet<>();
                 for (ToastDesc entity : toasts) {
                     if (entity.className.equals(name) &&
-                            (removeHoldToast || entity.level == LEVEL_CAN_REMOVE)) {
-                        removeSet.add(entity);
-                    }
-                }
-                if (removeSet.size() > 0) {
-                    toasts.removeAll(removeSet);
-                }
-            }
-        }
-    }
-
-    /**
-     * 移除所有可移除的toast
-     */
-    public static void remove(final boolean removeHoldToast) {
-        synchronized (toasts) {
-            if (removeHoldToast) {
-                toasts.clear();
-                return;
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                toasts.removeIf(new Predicate<ToastDesc>() {
-                    @Override
-                    public boolean test(ToastDesc entity) {
-                        return entity.level == LEVEL_CAN_REMOVE;
-                    }
-                });
-            } else {
-                Set<ToastDesc> removeSet = new HashSet<>();
-                for (ToastDesc entity : toasts) {
-                    if (entity.level == LEVEL_CAN_REMOVE) {
+                            (removeAll || entity.tag == tag)) {
                         removeSet.add(entity);
                     }
                 }
@@ -623,7 +574,7 @@ public class BToast {
 
     private static void addToast(ToastDesc toastDesc) {
         synchronized (toasts) {
-            remove(toastDesc.className, false);
+            remove(toastDesc.className, toastDesc.tag);
             toasts.add(toastDesc);
             if (canNotify)
                 toasts.notifyAll();
@@ -636,29 +587,29 @@ public class BToast {
 
     public static ToastDesc warning(Context context) {
         return new ToastDesc(context.getClass().getSimpleName(),
-                WARNING_COLOR, R.drawable.ic_warning_outline_white);
+                WARNING_COLOR, R.mipmap.ic_warning_outline_white);
     }
 
     public static ToastDesc info(Context context) {
         return new ToastDesc(context.getClass().getSimpleName(),
-                INFO_COLOR, R.drawable.ic_info_outline_white_48dp);
+                INFO_COLOR, R.mipmap.ic_info_outline_white_48dp);
     }
 
     public static ToastDesc success(Context context) {
         return new ToastDesc(context.getClass().getSimpleName(),
-                SUCCESS_COLOR, R.drawable.ic_check_white_48dp);
+                SUCCESS_COLOR, R.mipmap.ic_check_white_48dp);
     }
 
     public static ToastDesc error(Context context) {
         return new ToastDesc(context.getClass().getSimpleName(),
-                ERROR_COLOR, R.drawable.ic_error_outline_white_48dp);
+                ERROR_COLOR, R.mipmap.ic_error_outline_white_48dp);
     }
 
     public static ToastDesc custom(Context context) {
         return new ToastDesc(context.getClass().getSimpleName());
     }
 
-    static final class ToastDesc {
+    public static final class ToastDesc {
         private String className;
 
         private CharSequence text;
@@ -666,8 +617,6 @@ public class BToast {
         private int textRes = 0;
 
         private int duration = BToast.DEFAULT_DURATION;
-
-        private int level = BToast.LEVEL;
 
         @ColorInt
         private int tintColor = 0;
@@ -685,8 +634,6 @@ public class BToast {
         private WeakReference<View> target = null;
 
         private int textSize = BToast.TEXT_SIZE;
-
-//        private int style = STYLE_FILLET;
 
         private int animationGravity = BToast.ANIMATION_GRAVITY;
 
@@ -707,6 +654,8 @@ public class BToast {
         private long animationDuration = BToast.ANIMATION_DURATION;
 
         private int radius = BToast.RADIUS;
+
+        private int tag = 0;
 
         ToastDesc(String className) {
             this.className = className;
@@ -735,11 +684,6 @@ public class BToast {
 
         public ToastDesc text(CharSequence text) {
             this.text = text;
-            return this;
-        }
-
-        public ToastDesc level(int level) {
-            this.level = level;
             return this;
         }
 
@@ -799,11 +743,6 @@ public class BToast {
             return this;
         }
 
-//        public ToastDesc style(int style) {
-//            this.style = style;
-//            return this;
-//        }
-
         public ToastDesc animationDuration(int animationDuration) {
             this.animationDuration = animationDuration;
             return this;
@@ -819,8 +758,13 @@ public class BToast {
             return this;
         }
 
-        public ToastDesc radius(int radius){
+        public ToastDesc radius(int radius) {
             this.radius = radius;
+            return this;
+        }
+
+        public ToastDesc tag(int tag) {
+            this.tag = tag;
             return this;
         }
 
@@ -836,7 +780,7 @@ public class BToast {
         }
     }
 
-    static class Config {
+    public static class Config {
         private int duration = BToast.DEFAULT_DURATION;
 
         private int successColor = BToast.SUCCESS_COLOR;
@@ -864,12 +808,6 @@ public class BToast {
         private int relativeGravity = BToast.RELATIVE_GRAVITY;
 
         private int animationDuration = BToast.ANIMATION_DURATION;
-
-//        private int withTargetBackgroundStyle = BToast.WITH_TARGET_BACKGROUND_STYLE;
-//
-//        private int noTargetBackgroundStyle = BToast.NO_TARGET_BACKGROUND_STYLE;
-
-        private int level = BToast.LEVEL;
 
         private int radius = BToast.RADIUS;
 
@@ -951,22 +889,7 @@ public class BToast {
             return this;
         }
 
-//        public Config setWithTargetBackgroundStyle(int withTargetBackgroundStyle) {
-//            this.withTargetBackgroundStyle = withTargetBackgroundStyle;
-//            return this;
-//        }
-//
-//        public Config setNoTargetBackgroundStyle(int noTargetBackgroundStyle) {
-//            this.noTargetBackgroundStyle = noTargetBackgroundStyle;
-//            return this;
-//        }
-
-        public Config setLevel(int level){
-            this.level = level;
-            return this;
-        }
-
-        public Config setRadius(int radius){
+        public Config setRadius(int radius) {
             this.radius = radius;
             return this;
         }
@@ -986,9 +909,6 @@ public class BToast {
             BToast.ANIMATION_GRAVITY = animationGravity;
             BToast.RELATIVE_GRAVITY = relativeGravity;
             BToast.ANIMATION_DURATION = animationDuration;
-//            BToast.WITH_TARGET_BACKGROUND_STYLE = withTargetBackgroundStyle;
-//            BToast.NO_TARGET_BACKGROUND_STYLE = noTargetBackgroundStyle;
-            BToast.LEVEL = level;
             BToast.RADIUS = radius;
 
             BToast.init(app);

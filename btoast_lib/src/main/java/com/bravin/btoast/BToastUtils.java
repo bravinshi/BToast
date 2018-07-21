@@ -1,6 +1,5 @@
-package com.shi.btoast;
+package com.bravin.btoast;
 
-import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 

@@ -1,4 +1,4 @@
-package com.shi.bravin.btoast_lib;
+package com.shi.bravin.app;
 
 import org.junit.Test;
 

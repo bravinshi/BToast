@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.shi.btoast.view.AnimationLayout
+<com.bravin.btoast.view.AnimationLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/al_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <com.shi.btoast.view.StyleLayout
+    <com.bravin.btoast.view.StyleLayout
         android:id="@+id/toast_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -30,6 +30,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-    </com.shi.btoast.view.StyleLayout>
+    </com.bravin.btoast.view.StyleLayout>
 
-</com.shi.btoast.view.AnimationLayout>
+</com.bravin.btoast.view.AnimationLayout>

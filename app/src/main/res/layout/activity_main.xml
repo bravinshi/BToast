@@ -14,12 +14,28 @@
         android:layout_width="match_parent"
         android:layout_height="200dp">
 
-        <View
-            android:id="@+id/view"
+        <TextView
+            android:id="@+id/target"
+            android:layout_centerInParent="true"
+            android:text="target"
+            android:textColor="#FFFFFF"
+            android:gravity="center"
+            android:background="#DF5656"
+            android:layout_width="180dp"
+            android:layout_height="60dp"/>
+
+        <TextView
+            android:id="@+id/target1"
+            android:text="target1"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_below="@+id/target"
             android:layout_centerInParent="true"
             android:background="#DF5656"
-            android:layout_width="80dp"
-            android:layout_height="60dp"/>
+            android:layout_width="40dp"
+            android:layout_height="80dp"/>
 
     </RelativeLayout>
 
@@ -34,7 +50,31 @@
 
             <Button
                 android:id="@+id/btn"
-                android:text="normal success"
+                android:text="success"
+                android:layout_width="match_parent"
+                android:layout_height="50dp" />
+
+            <Button
+                android:id="@+id/btn10"
+                android:text="error"
+                android:layout_width="match_parent"
+                android:layout_height="50dp" />
+
+            <Button
+                android:id="@+id/btn11"
+                android:text="info"
+                android:layout_width="match_parent"
+                android:layout_height="50dp" />
+
+            <Button
+                android:id="@+id/btn12"
+                android:text="normal"
+                android:layout_width="match_parent"
+                android:layout_height="50dp" />
+
+            <Button
+                android:id="@+id/btn13"
+                android:text="warning"
                 android:layout_width="match_parent"
                 android:layout_height="50dp" />
 

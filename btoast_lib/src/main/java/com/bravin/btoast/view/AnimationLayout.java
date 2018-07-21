@@ -1,4 +1,4 @@
-package com.shi.btoast.view;
+package com.bravin.btoast.view;
 
 import android.animation.ValueAnimator;
 import android.content.Context;

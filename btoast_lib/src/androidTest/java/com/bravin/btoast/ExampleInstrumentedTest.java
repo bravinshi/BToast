@@ -1,4 +1,4 @@
-package com.shi.btoast;
+package com.bravin.btoast;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.shi.btoast", appContext.getPackageName());
+        assertEquals("com.bravin.btoast.test", appContext.getPackageName());
     }
 }

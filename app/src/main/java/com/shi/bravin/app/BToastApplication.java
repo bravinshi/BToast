@@ -1,6 +1,8 @@
-package com.shi.btoast;
+package com.shi.bravin.app;
 
 import android.app.Application;
+
+import com.bravin.btoast.BToast;
 
 public class BToastApplication extends Application {
     @Override
