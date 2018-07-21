@@ -41,6 +41,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 BToast.success(v.getContext())
+                        .layoutGravity(BToast.LAYOUT_GRAVITY_LEFT)
+                        .animate(true)
+                        .sameLength(true)
+                        .target(target)
                         .text("测试文字")
                         .show();
             }
@@ -50,8 +54,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 BToast.success(v.getContext())
-                        .text("测试文字")
+                        .layoutGravity(BToast.LAYOUT_GRAVITY_RIGHT)
+                        .relativeGravity(BToast.RELATIVE_GRAVITY_START)
                         .animate(true)
+                        .sameLength(true)
+                        .target(target)
+                        .text("测试文字")
                         .show();
             }
         });
@@ -116,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 BToast.success(v.getContext())
-                        .text("字")
+                        .text("请输入名称")
                         .layoutGravity(BToast.LAYOUT_GRAVITY_TOP)
                         .target(target)
                         .sameLength(true)
