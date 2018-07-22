@@ -50,8 +50,8 @@ public class BToast {
 
     private static boolean canNotify = false;
 
-    private static final int DURATION_SHORT = 3000;
-    private static final int DURATION_LONG = 4500;
+    private static int DURATION_SHORT = 3000;
+    private static int DURATION_LONG = 4500;
 
     private static int DEFAULT_DURATION = BToast.DURATION_SHORT;
 
@@ -168,8 +168,8 @@ public class BToast {
                     long delay = toastDesc.duration == DURATION_SHORT ? DURATION_SHORT : DURATION_LONG;
                     mainThreadHandler.sendEmptyMessageDelayed(FINISH_WITH_TARGET_TOAST, delay);
                 }
-            }else if (msg.what == FINISH_NO_TARGET_TOAST) {
-                synchronized (toasts){
+            } else if (msg.what == FINISH_NO_TARGET_TOAST) {
+                synchronized (toasts) {
                     toasts.notifyAll();
                 }
             } else {
@@ -180,7 +180,7 @@ public class BToast {
                     windowManager.removeView(view);
                 }
 
-                synchronized (toasts){
+                synchronized (toasts) {
                     toasts.notifyAll();
                 }
             }
@@ -525,14 +525,14 @@ public class BToast {
      * @param context Context类名
      */
     private static void remove(Context context) {
-        remove(context.getClass().getSimpleName(),true, 0);
+        remove(context.getClass().getSimpleName(), true, 0);
     }
 
     /**
      * 移除某一个Context中提交的可移除的toast
      *
      * @param context Context 类名
-     * @param tag tag
+     * @param tag     tag
      */
     private static void remove(Context context, int tag) {
         remove(context.getClass().getSimpleName(), false, tag);
@@ -545,9 +545,9 @@ public class BToast {
     /**
      * 移除某一个Context中提交的可移除的toast
      *
-     * @param name Context类名
+     * @param name      Context类名
      * @param removeAll 是否移除对应类名中的所有toast
-     * @param tag tag
+     * @param tag       tag
      */
     private static void remove(final String name, final boolean removeAll, final int tag) {
         synchronized (toasts) {
@@ -675,6 +675,10 @@ public class BToast {
         }
 
         public ToastDesc duration(int duration) {
+            if (duration != BToast.DURATION_SHORT && duration != BToast.DURATION_LONG) {
+                throw new IllegalArgumentException("duration should be" +
+                        " BToast.DURATION_SHORT or BToast.DURATION_LONG");
+            }
             this.duration = duration;
             return this;
         }
@@ -783,7 +787,7 @@ public class BToast {
     }
 
     public static class Config {
-        private int duration = BToast.DEFAULT_DURATION;
+        private int duration = 0;
 
         private int successColor = BToast.SUCCESS_COLOR;
 
@@ -813,6 +817,10 @@ public class BToast {
 
         private int radius = BToast.RADIUS;
 
+        private int shortDurationMillis = 3000;
+
+        private int longDurationMillis = 4500;
+
         private Config() {
 
         }
@@ -822,7 +830,13 @@ public class BToast {
         }
 
         public Config setDuration(int duration) {
-            this.duration = duration;
+            if (duration != BToast.DURATION_SHORT && duration != BToast.DURATION_LONG) {
+                throw new IllegalArgumentException("duration should be" +
+                        " BToast.DURATION_SHORT or BToast.DURATION_LONG");
+            }
+            if (duration == BToast.DURATION_LONG) {
+                this.duration = 1;
+            }
             return this;
         }
 
@@ -896,8 +910,25 @@ public class BToast {
             return this;
         }
 
+        public Config setShortDurationMillis(int shortDurationMillis){
+            this.shortDurationMillis = shortDurationMillis;
+            return this;
+        }
+
+        public Config setLongDurationMillis(int longDurationMillis){
+            this.longDurationMillis = longDurationMillis;
+            return this;
+        }
+
         public void apply(Application app) {
-            BToast.DEFAULT_DURATION = duration;
+            BToast.DURATION_SHORT = shortDurationMillis;
+            BToast.DURATION_LONG = longDurationMillis;
+            if (this.duration == 0) {
+                BToast.DEFAULT_DURATION = BToast.DURATION_SHORT;
+            } else {
+                BToast.DEFAULT_DURATION = BToast.DURATION_LONG;
+            }
+
             BToast.SUCCESS_COLOR = successColor;
             BToast.ERROR_COLOR = errorColor;
             BToast.INFO_COLOR = infoColor;
