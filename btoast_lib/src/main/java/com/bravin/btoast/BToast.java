@@ -236,7 +236,7 @@ public class BToast {
 
             } else {
                 final AnimationLayout animationLayout = (AnimationLayout) LayoutInflater.from(app)
-                        .inflate(R.layout.toast_layout_animate, null);
+                        .inflate(R.layout.toast_layout_animate_not_same_length, null);
                 final StyleLayout styleLayout = animationLayout.findViewById(R.id.toast_content);
                 setAnimationStyle(animationLayout, toastDesc);
                 applyStyle(styleLayout, toastDesc);
@@ -245,20 +245,40 @@ public class BToast {
                     return animationLayout;
                 }
                 // 由sameLength代理 RELATIVE_GRAVITY_END RELATIVE_GRAVITY_CENTER
-                RelativeLayout parent = new RelativeLayout(target.getContext());
-                RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(
+                final RelativeLayout wrapper = animationLayout.findViewById(R.id.rl_wrapper);
+
+                RelativeLayout.LayoutParams wrapperLP = new RelativeLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT
                         , ViewGroup.LayoutParams.WRAP_CONTENT);
-                int gravityRule;
-                if (toastDesc.relativeGravity == RELATIVE_GRAVITY_END) {
-                    gravityRule = RelativeLayout.ALIGN_PARENT_BOTTOM;
-                } else {
-                    gravityRule = RelativeLayout.CENTER_VERTICAL;
-                }
-                rlp.addRule(gravityRule);
-                parent.addView(animationLayout, rlp);
 
-                return parent;
+                RelativeLayout.LayoutParams styleLP = new RelativeLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                        , ViewGroup.LayoutParams.WRAP_CONTENT);
+
+                int gravityRule;
+                if (toastDesc.layoutGravity == LAYOUT_GRAVITY_TOP
+                        || toastDesc.layoutGravity == LAYOUT_GRAVITY_BOTTOM) {
+                    wrapperLP.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                    if (toastDesc.relativeGravity == RELATIVE_GRAVITY_END) {
+                        gravityRule = RelativeLayout.ALIGN_PARENT_END;
+                    } else {
+                        gravityRule = RelativeLayout.CENTER_HORIZONTAL;
+                    }
+                } else {
+                    wrapperLP.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                    if (toastDesc.relativeGravity == RELATIVE_GRAVITY_START) {
+                        gravityRule = RelativeLayout.ALIGN_PARENT_TOP;
+                    } else if (toastDesc.relativeGravity == RELATIVE_GRAVITY_CENTER){
+                        gravityRule = RelativeLayout.CENTER_VERTICAL;
+                    }else {
+                        gravityRule = RelativeLayout.ALIGN_PARENT_BOTTOM;
+                    }
+                }
+                styleLP.addRule(gravityRule);
+                styleLayout.setLayoutParams(styleLP);
+                wrapper.setLayoutParams(wrapperLP);
+
+                return animationLayout;
             }
         } else {
             if (toastDesc.sameLength) {
@@ -308,12 +328,26 @@ public class BToast {
                 RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT
                         , ViewGroup.LayoutParams.WRAP_CONTENT);
+
                 int gravityRule;
-                if (toastDesc.relativeGravity == RELATIVE_GRAVITY_END) {
-                    gravityRule = RelativeLayout.ALIGN_PARENT_BOTTOM;
+                if (toastDesc.layoutGravity == LAYOUT_GRAVITY_TOP
+                        || toastDesc.layoutGravity == LAYOUT_GRAVITY_BOTTOM) {
+                    if (toastDesc.relativeGravity == RELATIVE_GRAVITY_END) {
+                        gravityRule = RelativeLayout.ALIGN_PARENT_END;
+                    } else {
+                        gravityRule = RelativeLayout.CENTER_HORIZONTAL;
+                    }
+
                 } else {
-                    gravityRule = RelativeLayout.CENTER_VERTICAL;
+                    if (toastDesc.relativeGravity == RELATIVE_GRAVITY_START) {
+                        gravityRule = RelativeLayout.ALIGN_PARENT_TOP;
+                    } else if (toastDesc.relativeGravity == RELATIVE_GRAVITY_CENTER){
+                        gravityRule = RelativeLayout.CENTER_VERTICAL;
+                    }else {
+                        gravityRule = RelativeLayout.ALIGN_PARENT_BOTTOM;
+                    }
                 }
+
                 rlp.addRule(gravityRule);
                 parent.addView(toastLayout, rlp);
 
