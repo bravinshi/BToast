@@ -48,89 +48,201 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text_general_features"/>
+
             <Button
                 android:id="@+id/btn"
                 android:text="success"
                 android:layout_width="match_parent"
-                android:layout_height="50dp" />
+                android:layout_height="wrap_content" />
 
             <Button
                 android:id="@+id/btn10"
                 android:text="error"
                 android:layout_width="match_parent"
-                android:layout_height="50dp" />
+                android:layout_height="wrap_content" />
 
             <Button
                 android:id="@+id/btn11"
                 android:text="info"
                 android:layout_width="match_parent"
-                android:layout_height="50dp" />
+                android:layout_height="wrap_content" />
 
             <Button
                 android:id="@+id/btn12"
                 android:text="normal"
                 android:layout_width="match_parent"
-                android:layout_height="50dp" />
+                android:layout_height="wrap_content" />
 
             <Button
                 android:id="@+id/btn13"
                 android:text="warning"
                 android:layout_width="match_parent"
-                android:layout_height="50dp" />
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/btn21"
+                android:text="radius(0) success"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <Button
                 android:id="@+id/btn1"
                 android:text="animate success"
                 android:layout_width="match_parent"
-                android:layout_height="50dp" />
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/btn14"
+                android:text="animate left success"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/btn15"
+                android:text="animate right success"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/btn16"
+                android:text="animate bottom success"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <Button
                 android:id="@+id/btn2"
                 android:text="layout right success"
                 android:layout_width="match_parent"
-                android:layout_height="50dp" />
+                android:layout_height="wrap_content" />
 
             <Button
                 android:id="@+id/btn3"
                 android:text="layout top success"
                 android:layout_width="match_parent"
-                android:layout_height="50dp" />
+                android:layout_height="wrap_content" />
 
             <Button
                 android:id="@+id/btn4"
                 android:text="layout left success"
                 android:layout_width="match_parent"
-                android:layout_height="50dp" />
+                android:layout_height="wrap_content" />
 
             <Button
                 android:id="@+id/btn5"
                 android:text="layout bottom success"
                 android:layout_width="match_parent"
-                android:layout_height="50dp" />
+                android:layout_height="wrap_content" />
 
             <Button
                 android:id="@+id/btn6"
                 android:text="layout right samelength success"
                 android:layout_width="match_parent"
-                android:layout_height="50dp" />
+                android:layout_height="wrap_content" />
 
             <Button
                 android:id="@+id/btn7"
                 android:text="layout top samelength success"
                 android:layout_width="match_parent"
-                android:layout_height="50dp" />
+                android:layout_height="wrap_content" />
 
             <Button
                 android:id="@+id/btn8"
                 android:text="layout left samelength success"
                 android:layout_width="match_parent"
-                android:layout_height="50dp" />
+                android:layout_height="wrap_content" />
 
             <Button
                 android:id="@+id/btn9"
                 android:text="layout bottom samelength success"
                 android:layout_width="match_parent"
-                android:layout_height="50dp" />
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/btn17"
+                android:text="relative start samelength success"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/btn18"
+                android:text="relative center samelength success"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/btn19"
+                android:text="relative end samelength success"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/btn20"
+                android:text="relative end samelength animate success"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_marginTop="25dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text_advanced_features"/>
+
+            <TextView
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="tag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text_hint_tag"/>
+
+            <Button
+                android:id="@+id/btn22"
+                android:text="tag property(click me non-stop!)"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/btn23"
+                android:text="tag(1) (click button above multi-time than click me)"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="not depend on Looper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text_any_thread"/>
+
+            <TextView
+                android:textSize="16sp"
+                android:layout_marginTop="10dp"
+                android:textStyle="bold"
+                android:text="clear toast whan activity finished"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text_any_thread"/>
 
         </LinearLayout>
 

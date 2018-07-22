@@ -4,7 +4,7 @@
     <string name="text_general_features">general features</string>
     <string name="text_advanced_features">advanced features</string>
     <string name="text_hint_tag">tag is a advanced feature of BToast.toast with same tag only can keep one in the waiting queue.if you do not set tag, tag is 0(default)</string>
-    <string name="text_any_thread">u can use BToast in a sub thread without run Looper.prepare() and Looper.loop()\n
+    <string name="text_any_thread">u can use BToast in a sub thread without Looper\n
         for example:\n
     new Thread(new Runnable() {\n
             @Override\n
@@ -12,5 +12,5 @@
                 BToast.info(MainActivity.this).text("text").show();\n
             }\n
         }).start();</string>
-    <string name="text_clear_toast">whan activity finished， toasts(delivered by this activity) inside of queue will be removed</string>
+    <string name="text_clear_toast">whan activity finished， toasts(delivered by this activity) inside of queue will be removed(if there is still)</string>
 </resources>

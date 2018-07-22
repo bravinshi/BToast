@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">BToast</string>
+    <string name="text_test_content">这是测试文字</string>
+    <string name="text_general_features">一般特性</string>
+    <string name="text_advanced_features">高级特性</string>
+    <string name="text_hint_tag">tag是BToast的一个高级特性，拥有相同tag的toast只能在等待队列中保留一个，如果不指定，则默认的tag为0</string>
+    <string name="text_any_thread">你可以在子线程中使用BToast而不需要开启Looper\n
+        for example:\n
+    new Thread(new Runnable() {\n
+            @Override\n
+            public void run() {\n
+                BToast.info(MainActivity.this).text("text").show();\n
+            }\n
+        }).start();</string>
+    <string name="text_clear_toast">当一个activity推出，这个activity发送的toast会被移除(如果队列中还有)</string>
+</resources>

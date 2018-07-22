@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -208,22 +209,22 @@ public class BToast {
                     styleLayoutLP.width = target.getMeasuredWidth() + toastDesc.offsetW;
 
                     if (toastDesc.relativeGravity == RELATIVE_GRAVITY_START) {
-                        relativeGravity = RelativeLayout.ALIGN_PARENT_TOP;
+                        relativeGravity = RelativeLayout.ALIGN_PARENT_START;
                     } else if (toastDesc.relativeGravity == RELATIVE_GRAVITY_CENTER) {
                         relativeGravity = RelativeLayout.CENTER_HORIZONTAL;
                     } else {
-                        relativeGravity = RelativeLayout.ALIGN_PARENT_BOTTOM;
+                        relativeGravity = RelativeLayout.ALIGN_PARENT_END;
                     }
                 } else {
 
                     styleLayoutLP.height = target.getMeasuredHeight() + toastDesc.offsetH;
 
                     if (toastDesc.relativeGravity == RELATIVE_GRAVITY_START) {
-                        relativeGravity = RelativeLayout.ALIGN_PARENT_START;
+                        relativeGravity = RelativeLayout.ALIGN_PARENT_TOP;
                     } else if (toastDesc.relativeGravity == RELATIVE_GRAVITY_CENTER) {
                         relativeGravity = RelativeLayout.CENTER_VERTICAL;
                     } else {
-                        relativeGravity = RelativeLayout.ALIGN_PARENT_END;
+                        relativeGravity = RelativeLayout.ALIGN_PARENT_BOTTOM;
                     }
                 }
                 lp.addRule(relativeGravity);
@@ -377,6 +378,7 @@ public class BToast {
                             + toastDesc.offsetW, View.MeasureSpec.EXACTLY);
                     content.measure(measureSpecB,
                             ViewGroup.LayoutParams.WRAP_CONTENT);
+                    Log.d("VY", content.getMeasuredHeight() + "");
                     lp.x = viewLocation[0] + toastDesc.offsetX;
                     lp.y = viewLocation[1] + target.getMeasuredHeight() + toastDesc.offsetY;
                     lp.width = target.getMeasuredWidth() + toastDesc.offsetW;
