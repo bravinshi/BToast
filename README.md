@@ -201,6 +201,7 @@ tag is a advanced feature of BToast, toasts with same tag only can keep one in t
 ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/tag0.gif) 
 
 create a toast with tag
+
         ```Java
 BToast.warning(v.getContext())
             .text(R.string.text_test_content)
@@ -212,11 +213,10 @@ BToast.warning(v.getContext())
 
  ### not depend on Looper
  u can use BToast in a sub thread without run Looper.prepare() and Looper.loop()  
- 
-        for example:  
+ for example:  
 		
 		```Java
-    new Thread(new Runnable() {  
+        new Thread(new Runnable() {  
             @Override  
             public void run() {  
                 BToast.info(MainActivity.this).text("text").show();  
