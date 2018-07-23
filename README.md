@@ -82,6 +82,28 @@ To display an error Toast：
    
    ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/normal.jpg) 
   
+  To display an rectangle success Toast：
+  
+  ```Java
+   BToast.success(v.getContext())
+            .text(R.string.text_test_content)
+			.radius(0)
+            .show();
+   ```
+   
+   ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/radius0.jpg) 
+ 
+ 
+ To display an samelength success Toast with target(View)：  samelength mean same width(layout_gravity_top layout_gravity_bottm) or same height(layout_gravity_left layout_gravity_right)
+  ```Java
+   BToast.success(v.getContext())
+            .text(R.string.text_test_content)
+			.samelength(true)
+            .target(target)
+            .show();
+   ```
+  ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/layout_bottom_samelength.jpg) 
+ 
  
 ### Dependency
  
