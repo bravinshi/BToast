@@ -193,6 +193,15 @@ To display an error Toast：
    
    ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/relative_end_samelength_animate_success.gif) 
    
+   ### layout gravity
+   
+   ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/layout_gravity.png) 
+   
+   ### relative gravity
+   
+   ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/relative_gravity.png) 
+   
+   
    
  ## advanced features
  
