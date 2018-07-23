@@ -14,13 +14,13 @@
                         .show();
    ```
    
-   ![success](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/success.png) 
+   ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/success.jpg) 
   
   
  
-###Dependency
+### Dependency
  
-####1
+#### 1
  
  ```Java
  buildscript {
@@ -34,7 +34,7 @@
  }
 ```
 
-###2
+### 2
  
   ```Java
  dependencies {
@@ -42,6 +42,5 @@
     implementation 'com.bravin.btoast:BToast:1.0.0'
  }
  ```
- 
- ###Dependency
+
  
