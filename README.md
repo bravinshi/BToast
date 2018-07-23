@@ -4,7 +4,7 @@
  
  an Toast Util For Android!
  
- ### Dependency
+ ## Dependency
  
  #### 1
  
@@ -20,7 +20,7 @@
  }
  ```
 
-### 2
+#### 2
  
   ```Java
  dependencies {
@@ -29,7 +29,7 @@
  }
  ```
  
- ### Config
+ ## Config
  
  custom your Application and override onCreate() method
  
@@ -65,9 +65,9 @@ such as:
    ```
  
  
-### Show And Usage
+## Show And Usage (Attributes can be combined at will, Here is only a small amount)
 
-#### base
+### base
   
   To display an success Toast：
   
@@ -101,7 +101,7 @@ such as:
   ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/layout_bottom.jpg) 
   
   
-#### more
+### more
 
 To display an error Toast：
   
@@ -177,6 +177,42 @@ To display an error Toast：
    ```
    
    ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/relative_end_samelength.jpg) 
+   
+   
+   To display an relative_end samelength animate success Toast:
+```Java
+   BToast.success(v.getContext())
+            .text(R.string.text_test_content)
+            .relativeGravity(BToast.RELATIVE_GRAVITY_END)
+            .sameLength(true)
+            .animate(true)
+            .target(target)
+            .show();
+   ```
+   
+   ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/relative_end_samelength_animate_success.gif) 
+   
+   
+ ## advanced features
+ 
+ ### tag
+tag is a advanced feature of BToast.toast with same tag only can keep one in the waiting queue.if you do not set tag, tag is 0(default)
+
+
+ ### not depend on Looper
+ u can use BToast in a sub thread without run Looper.prepare() and Looper.loop()
+        for example:
+    new Thread(new Runnable() {
+            @Override
+            public void run() {
+                BToast.info(MainActivity.this).text("text").show();
+            }
+        }).start();
+
+
+ ### clear toast when activity finished
+ when activity finished， toasts(delivered by this activity) inside of queue will be removed(If there is still)
+ 
 
 
  

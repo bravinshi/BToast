@@ -12,5 +12,5 @@
                 BToast.info(MainActivity.this).text("text").show();\n
             }\n
         }).start();</string>
-    <string name="text_clear_toast">whan activity finished， toasts(delivered by this activity) inside of queue will be removed</string>
+    <string name="text_clear_toast">when activity finished， toasts(delivered by this activity) inside of queue will be removed</string>
 </resources>
