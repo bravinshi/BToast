@@ -19,7 +19,7 @@
    ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/success.jpg) 
   
   
-  To display an animate success Toast：
+  To display an animate success Toast：(coder can assign animation direction using animationGravity. default is BToast.ANIMATION_GRAVITY_TOP other values are BToast.ANIMATION_GRAVITY_LEFT, BToast.ANIMATION_GRAVITY_RIGHT, BToast.ANIMATION_GRAVITY_BOTTOM)
   
   ```Java
    BToast.success(v.getContext())
