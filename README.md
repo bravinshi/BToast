@@ -14,7 +14,7 @@
                         .show();
    ```
    
-   ![success](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/success.jpg =200x) 
+   ![success](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/success.png) 
   
   
  
