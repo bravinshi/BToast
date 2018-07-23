@@ -1,10 +1,10 @@
- #BToast
+# BToast
 
- [ ![Download](https://api.bintray.com/packages/bsss/maven/BToast/images/download.svg) ](https://bintray.com/bsss/maven/BToast/_latestVersion)
+ [![Download](https://api.bintray.com/packages/bsss/maven/BToast/images/download.svg) ](https://bintray.com/bsss/maven/BToast/_latestVersion)
  
  an Toast Util For Android!
  
- ###Show And Usage
+### Show And Usage
   
   To display an success Toast：
   
@@ -18,9 +18,9 @@
   
   
  
- ###Dependency
+###Dependency
  
- ####1
+####1
  
  ```Java
  buildscript {
@@ -34,7 +34,7 @@
  }
 ```
 
- ####2
+###2
  
   ```Java
  dependencies {
