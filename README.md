@@ -112,7 +112,8 @@ To display an error Toast：
   ```Java
    BToast.success(v.getContext())
             .text(R.string.text_test_content)
-			.radius(0)
+            .sameLength(true)
+            .target(target)
             .show();
    ```
    
@@ -134,9 +135,8 @@ To display an error Toast：
 ```Java
    BToast.success(v.getContext())
             .text(R.string.text_test_content)
-			.samelength(true)
-			.relativeGravity(BToast.RELATIVE_GRAVITY_END)
-			.radius(0)
+            .sameLength(true)
+            .relativeGravity(BToast.RELATIVE_GRAVITY_END)
             .show();
    ```
    
