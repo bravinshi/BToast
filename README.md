@@ -207,13 +207,20 @@ BToast.warning(v.getContext())
 		```
 
  ### not depend on Looper
- u can use BToast in a sub thread without run Looper.prepare() and Looper.loop()\n
-        for example:\n
-    new Thread(new Runnable() {\n
-            @Override\n
-            public void run() {\n
-                BToast.info(MainActivity.this).text("text").show();\n
-            }\n
+ u can use BToast in a sub thread without run Looper.prepare() and Looper.loop()  
+ 
+        for example:  
+		
+    new Thread(new Runnable() {  
+	
+            @Override  
+			
+            public void run() {  
+			
+                BToast.info(MainActivity.this).text("text").show();  
+				
+            }  
+			
         }).start();
 
 
