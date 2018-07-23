@@ -203,7 +203,7 @@ To display an error Toast：
    
    
    
- ## advanced features
+ ## Advanced Features
  
  ### tag
 tag is a advanced feature of BToast, toasts with same tag only can keep one in the waiting queue.if you do not set tag, tag is 0(default)
