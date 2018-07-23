@@ -9,6 +9,23 @@ public class BToastApplication extends Application {
     public void onCreate() {
         super.onCreate();
         BToast.Config.getInstance()
+//                .setAnimate()
+//                .setAnimationDuration()
+//                .setAnimationGravity()
+//                .setDuration()
+//                .setTextColor()
+//                .setErrorColor()
+//                .setInfoColor()
+//                .setSuccessColor()
+//                .setWarningColor()
+//                .setLayoutGravity()
+//                .setLongDurationMillis()
+//                .setRadius()
+//                .setRelativeGravity()
+//                .setSameLength()
+//                .setShortDurationMillis()
+//                .setShowIcon()
+//                .setTextSize()
                 .apply(this);
     }
 }
