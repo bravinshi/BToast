@@ -198,6 +198,8 @@ To display an error Toast：
  ### tag
 tag is a advanced feature of BToast, toasts with same tag only can keep one in the waiting queue.if you do not set tag, tag is 0(default)
 
+![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/tag0.gif) 
+
 create a toast with tag
         ```Java
 BToast.warning(v.getContext())
@@ -205,23 +207,24 @@ BToast.warning(v.getContext())
             .tag(1)
             .show();
 		```
+		
+![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/tag1.gif) 
 
  ### not depend on Looper
  u can use BToast in a sub thread without run Looper.prepare() and Looper.loop()  
  
         for example:  
 		
+		```Java
     new Thread(new Runnable() {  
-	
             @Override  
-			
             public void run() {  
-			
                 BToast.info(MainActivity.this).text("text").show();  
-				
             }  
-			
         }).start();
+		```
+		
+    
 
 
  ### clear toast when activity finished
