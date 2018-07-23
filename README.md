@@ -4,6 +4,31 @@
  
  an Toast Util For Android!
  
+ ### Dependency
+ 
+ #### 1
+ 
+ ```Java
+ buildscript {
+    repositories {
+        ...
+        jcenter()
+    }
+    dependencies {
+       ...
+    }
+ }
+ ```
+
+### 2
+ 
+  ```Java
+ dependencies {
+    ...
+    implementation 'com.bravin.btoast:BToast:1.0.0'
+ }
+ ```
+ 
 ### Show And Usage
 
 #### base
@@ -19,7 +44,7 @@
    ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/success.jpg) 
   
   
-  To display an animate success Toast：(coder can assign animation direction using animationGravity. default is BToast.ANIMATION_GRAVITY_TOP other values are BToast.ANIMATION_GRAVITY_LEFT, BToast.ANIMATION_GRAVITY_RIGHT, BToast.ANIMATION_GRAVITY_BOTTOM)
+  To display an animate success Toast：(coder can assign animation direction using animationGravity. default is BToast.ANIMATION_GRAVITY_TOP. other values are BToast.ANIMATION_GRAVITY_LEFT, BToast.ANIMATION_GRAVITY_RIGHT, BToast.ANIMATION_GRAVITY_BOTTOM)
   
   ```Java
    BToast.success(v.getContext())
@@ -94,7 +119,7 @@ To display an error Toast：
    ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/radius0.jpg) 
  
  
- To display an samelength success Toast with target(View)：  samelength mean same width(layout_gravity_top layout_gravity_bottm) or same height(layout_gravity_left layout_gravity_right)
+ To display an samelength success Toast with target(View)：  (samelength mean same width(layout_gravity_top layout_gravity_bottm) or same height(layout_gravity_left layout_gravity_right))
   ```Java
    BToast.success(v.getContext())
             .text(R.string.text_test_content)
@@ -105,29 +130,17 @@ To display an error Toast：
   ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/layout_bottom_samelength.jpg) 
  
  
-### Dependency
- 
-#### 1
- 
- ```Java
- buildscript {
-    repositories {
-        ...
-        jcenter()
-    }
-    dependencies {
-       ...
-    }
- }
-```
+ To display an relative_end samelength success Toast:
+```Java
+   BToast.success(v.getContext())
+            .text(R.string.text_test_content)
+			.samelength(true)
+			.relativeGravity(BToast.RELATIVE_GRAVITY_END)
+			.radius(0)
+            .show();
+   ```
+   
+   ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/relative_end_samelength.jpg) 
 
-### 2
- 
-  ```Java
- dependencies {
-    ...
-    implementation 'com.bravin.btoast:BToast:1.0.0'
- }
- ```
 
  
