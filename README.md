@@ -10,11 +10,24 @@
   
    ```Java
    BToast.success(v.getContext())
-                        .text("this is text")
-                        .show();
+            .text("this is text")
+            .show();
    ```
    
    ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/success.jpg) 
+  
+  
+  To display an animate success Toast：
+  
+  ```Java
+   BToast.success(v.getContext())
+            .text(R.string.text_test_content)
+            .animate(true)
+            .show();
+   ```
+  ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/animate_success.gif) 
+  
+  
   
   
  
