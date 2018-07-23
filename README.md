@@ -164,11 +164,12 @@ To display an error Toast：
             .target(target)
             .show();
    ```
+   
   ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/layout_bottom_samelength.jpg) 
  
  
  To display an relative_end samelength success Toast:
-```Java
+    ```Java
    BToast.success(v.getContext())
             .text(R.string.text_test_content)
             .sameLength(true)
@@ -180,7 +181,7 @@ To display an error Toast：
    
    
    To display an relative_end samelength animate success Toast:
-```Java
+   ```Java
    BToast.success(v.getContext())
             .text(R.string.text_test_content)
             .relativeGravity(BToast.RELATIVE_GRAVITY_END)
@@ -202,12 +203,12 @@ tag is a advanced feature of BToast, toasts with same tag only can keep one in t
 
 create a toast with tag
 
-        ```Java
+```Java
 BToast.warning(v.getContext())
             .text(R.string.text_test_content)
             .tag(1)
             .show();
-		```
+```
 		
 ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/tag1.gif) 
 
@@ -215,14 +216,13 @@ BToast.warning(v.getContext())
  u can use BToast in a sub thread without run Looper.prepare() and Looper.loop()  
  for example:  
 		
-		```Java
+	
         new Thread(new Runnable() {  
             @Override  
             public void run() {  
                 BToast.info(MainActivity.this).text("text").show();  
             }  
         }).start();
-		```
 		
     
 
