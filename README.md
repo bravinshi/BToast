@@ -196,17 +196,24 @@ To display an error Toast：
  ## advanced features
  
  ### tag
-tag is a advanced feature of BToast.toast with same tag only can keep one in the waiting queue.if you do not set tag, tag is 0(default)
+tag is a advanced feature of BToast, toasts with same tag only can keep one in the waiting queue.if you do not set tag, tag is 0(default)
 
+create a toast with tag
+        ```Java
+BToast.warning(v.getContext())
+            .text(R.string.text_test_content)
+            .tag(1)
+            .show();
+		```
 
  ### not depend on Looper
- u can use BToast in a sub thread without run Looper.prepare() and Looper.loop()
-        for example:
-    new Thread(new Runnable() {
-            @Override
-            public void run() {
-                BToast.info(MainActivity.this).text("text").show();
-            }
+ u can use BToast in a sub thread without run Looper.prepare() and Looper.loop()\n
+        for example:\n
+    new Thread(new Runnable() {\n
+            @Override\n
+            public void run() {\n
+                BToast.info(MainActivity.this).text("text").show();\n
+            }\n
         }).start();
 
 
