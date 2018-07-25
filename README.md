@@ -8,7 +8,7 @@
  
  #### 1
  
- ```Java
+```Java
  buildscript {
     repositories {
         ...
@@ -18,16 +18,16 @@
        ...
     }
  }
- ```
+```
 
 #### 2
  
-  ```Java
+```Java
  dependencies {
     ...
     implementation 'com.bravin.btoast:BToast:1.0.0'
  }
- ```
+```
  
  ## Config
  
@@ -35,7 +35,7 @@
  
 such as:
 
-   ```Java
+```Java
    public class BToastApplication extends Application {
     @Override
     public void onCreate() {
@@ -62,7 +62,7 @@ such as:
                 .apply(this);// must call
     }
 }
-   ```
+```
  
  
 ## Show And Usage (Attributes can be combined at will, Here is only a small amount)
@@ -71,33 +71,32 @@ such as:
   
   To display an success Toast：
   
-   ```Java
+```Java
    BToast.success(v.getContext())
             .text("this is text")
             .show();
-   ```
+```
    
    ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/success.jpg) 
   
   
   To display an animate success Toast：(coder can assign animation direction using animationGravity. default is BToast.ANIMATION_GRAVITY_TOP. other values are BToast.ANIMATION_GRAVITY_LEFT, BToast.ANIMATION_GRAVITY_RIGHT, BToast.ANIMATION_GRAVITY_BOTTOM)
-  
-  ```Java
+```Java
    BToast.success(v.getContext())
             .text(R.string.text_test_content)
             .animate(true)
             .show();
-   ```
+```
   ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/animate_success.gif) 
   
   
   To display an success Toast with target(View)：
-  ```Java
+```Java
    BToast.success(v.getContext())
             .text(R.string.text_test_content)
             .target(target)
             .show();
-   ```
+```
   ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/layout_bottom.jpg) 
   
   
@@ -105,65 +104,65 @@ such as:
 
 To display an error Toast：
   
-   ```Java
+```Java
    BToast.error(v.getContext())
             .text(R.string.text_test_content)
             .show();
-   ```
+```
    
    ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/error.jpg) 
    
    To display an info Toast：
   
-   ```Java
+```Java
    BToast.info(v.getContext())
             .text(R.string.text_test_content)
             .show();
-   ```
+```
    
    ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/info.jpg) 
    
    To display an waring Toast：
   
-   ```Java
+```Java
    BToast.waring(v.getContext())
             .text(R.string.text_test_content)
             .show();
-   ```
+```
    
    ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/warning.jpg) 
    
    To display an normal Toast：
   
-   ```Java
+```Java
    BToast.normal(v.getContext())
             .text(R.string.text_test_content)
             .show();
-   ```
+```
    
    ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/normal.jpg) 
   
   To display an rectangle success Toast：
   
-    ```Java
+```Java
     BToast.success(v.getContext())
             .text(R.string.text_test_content)
             .radius(0)
             .target(target)
             .show();
-	```
+```
    
    ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/radius0.jpg) 
  
  
  To display an samelength success Toast with target(View)：  (samelength mean same width(layout_gravity_top layout_gravity_bottm) or same height(layout_gravity_left layout_gravity_right))
-  ```Java
+```Java
    BToast.success(v.getContext())
             .text(R.string.text_test_content)
             .sameLength(true)
             .target(target)
             .show();
-   ```
+```
    
    
    
@@ -177,14 +176,14 @@ To display an error Toast：
             .sameLength(true)
             .relativeGravity(BToast.RELATIVE_GRAVITY_END)
             .show();
-   ```
+```
    
     ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/relative_end_samelength.jpg) 
    
    
    To display an relative_end samelength animate success Toast:
    
-       ```Java
+```Java
    BToast.success(v.getContext())
             .text(R.string.text_test_content)
             .relativeGravity(BToast.RELATIVE_GRAVITY_END)
@@ -192,7 +191,7 @@ To display an error Toast：
             .animate(true)
             .target(target)
             .show();
-   ```
+```
    
    ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/relative_end_samelength_animate_success.gif) 
    
