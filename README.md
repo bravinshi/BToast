@@ -181,7 +181,8 @@ To display an error Toast：
    
    
    To display an relative_end samelength animate success Toast:
-   ```Java
+   
+       ```Java
    BToast.success(v.getContext())
             .text(R.string.text_test_content)
             .relativeGravity(BToast.RELATIVE_GRAVITY_END)
