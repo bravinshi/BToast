@@ -226,7 +226,7 @@ BToast.warning(v.getContext())
 
  ### not depend on Looper
  u can use BToast in a sub thread without run Looper.prepare() and Looper.loop()  
- ```Java
+
  for example:  
 		
 	
@@ -236,7 +236,6 @@ BToast.warning(v.getContext())
                 BToast.info(MainActivity.this).text("text").show();  
             }  
         }).start();
-		   ```
     
 
 
