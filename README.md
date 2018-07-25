@@ -166,7 +166,7 @@ BToast.success(v.getContext())
    
    
    
-  ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/layout_bottom_samelength.jpg) 
+![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/layout_bottom_samelength.jpg) 
  
  
  To display an relative_end samelength success Toast:
@@ -179,6 +179,7 @@ BToast.success(v.getContext())
 ```
    
 ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/relative_end_samelength.jpg) 
+
 To display an relative_end samelength animate success Toast:
    
 ```Java
@@ -226,14 +227,14 @@ BToast.warning(v.getContext())
 
  for example:  
 		
-	
-        new Thread(new Runnable() {  
+```Java
+new Thread(new Runnable() {  
             @Override  
             public void run() {  
                 BToast.info(MainActivity.this).text("text").show();  
             }  
         }).start();
-    
+```
 
 
  ### clear toast when activity finished
