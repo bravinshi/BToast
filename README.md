@@ -145,13 +145,13 @@ To display an error Toast：
   
   To display an rectangle success Toast：
   
-         ```Java
-   BToast.success(v.getContext())
+    ```Java
+    BToast.success(v.getContext())
             .text(R.string.text_test_content)
             .radius(0)
             .target(target)
             .show();
-   ```
+	```
    
    ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/radius0.jpg) 
  
