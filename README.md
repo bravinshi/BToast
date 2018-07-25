@@ -145,7 +145,7 @@ To display an error Toast：
   
   To display an rectangle success Toast：
   
-  ```Java
+         ```Java
    BToast.success(v.getContext())
             .text(R.string.text_test_content)
             .radius(0)
@@ -165,11 +165,13 @@ To display an error Toast：
             .show();
    ```
    
+   
+   
   ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/layout_bottom_samelength.jpg) 
  
  
  To display an relative_end samelength success Toast:
-    ```Java
+```Java
    BToast.success(v.getContext())
             .text(R.string.text_test_content)
             .sameLength(true)
@@ -177,7 +179,7 @@ To display an error Toast：
             .show();
    ```
    
-   ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/relative_end_samelength.jpg) 
+    ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/relative_end_samelength.jpg) 
    
    
    To display an relative_end samelength animate success Toast:
@@ -224,6 +226,7 @@ BToast.warning(v.getContext())
 
  ### not depend on Looper
  u can use BToast in a sub thread without run Looper.prepare() and Looper.loop()  
+ ```Java
  for example:  
 		
 	
@@ -233,7 +236,7 @@ BToast.warning(v.getContext())
                 BToast.info(MainActivity.this).text("text").show();  
             }  
         }).start();
-		
+		   ```
     
 
 
