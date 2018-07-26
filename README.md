@@ -25,7 +25,7 @@
 ```Java
  dependencies {
     ...
-    implementation 'com.bravin.btoast:BToast:1.0.0'
+    implementation 'com.bravin.btoast:BToast:1.0.1'
  }
 ```
  
@@ -203,6 +203,23 @@ To display an relative_end samelength animate success Toast:
    ![](https://github.com/bravinshi/ImJack/blob/master/BToast_screen_cup/relative_gravity.png) 
    
    
+   
+ ## Some attributes that must be said
+ 
+ #### offsetX
+ Offset value on the X axis, if you display a toast with target, u can adjust toast postion on X axis using this value.
+ 
+ #### offsetY
+ Offset value on the Y axis, if you display a toast with target, u can adjust toast postion on Y axis using this value.
+ 
+ #### offsetW
+ Offset value for toast's width, if you display a toast with target and sameLength(LAYOUT_GRAVITY_TOP LAYOUT_GRAVITY_BOTTOM), u can adjust toast's width using this value.
+ 
+ #### offsetH
+ Offset value for toast's height, if you display a toast with target and sameLength(LAYOUT_GRAVITY_LEFT LAYOUT_GRAVITY_RIGHT), u can adjust toast's height using this value.
+ 
+ 
+ 
    
  ## Advanced Features
  
