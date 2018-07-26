@@ -783,6 +783,16 @@ public class BToast {
             return this;
         }
 
+        public ToastDesc offsetW(int offsetW) {
+            this.offsetW = offsetW;
+            return this;
+        }
+
+        public ToastDesc offsetH(int offsetH) {
+            this.offsetH = offsetH;
+            return this;
+        }
+
         public ToastDesc animationDuration(int animationDuration) {
             this.animationDuration = animationDuration;
             return this;

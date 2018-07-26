@@ -1,6 +1,7 @@
 package com.shi.bravin.app;
 
 import android.app.Application;
+import android.widget.Toast;
 
 import com.bravin.btoast.BToast;
 
