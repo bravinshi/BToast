@@ -148,7 +148,6 @@ BToast.normal(v.getContext())
 BToast.success(v.getContext())
             .text(R.string.text_test_content)
             .radius(0)
-            .target(target)
             .show();
 ```
    
