@@ -50,8 +50,8 @@ public class BToast {
 
     private static boolean canNotify = false;
 
-    private static int DURATION_SHORT = 3000;
-    private static int DURATION_LONG = 4500;
+    public static int DURATION_SHORT = 3000;
+    public static int DURATION_LONG = 4500;
 
     private static int DEFAULT_DURATION = BToast.DURATION_SHORT;
 
