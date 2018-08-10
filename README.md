@@ -25,7 +25,7 @@
 ```Java
  dependencies {
     ...
-    implementation 'com.bravin.btoast:BToast:1.0.1'
+    implementation 'com.bravin.btoast:BToast:x.x.x'
  }
 ```
  
