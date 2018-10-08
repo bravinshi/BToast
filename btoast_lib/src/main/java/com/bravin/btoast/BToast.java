@@ -871,9 +871,7 @@ public class BToast {
 
         private int longDurationMillis = 4500;
 
-        private Config() {
-
-        }
+        private Config() {}
 
         public static Config getInstance() {
             return new Config();
