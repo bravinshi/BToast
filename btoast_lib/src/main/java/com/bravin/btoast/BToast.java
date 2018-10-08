@@ -148,18 +148,18 @@ public class BToast {
             super.handleMessage(msg);
             if (msg.what == SHOW_TOAST) {
                 ToastDesc toastDesc = (ToastDesc) msg.obj;
-                View view = toastDesc.getTarget();
-                if (view == null) {
+                View target = toastDesc.getTarget();
+                if (target == null) {
                     if (toastDesc.animate) {
                         showAnimationToast(toastDesc);
                     } else {
                         showStaticToast(toastDesc);
                     }
                 } else {
-                    View toastLayout = createToastLayout(view, toastDesc);
-                    WindowManager.LayoutParams lp = createLayoutParams(view, toastLayout, toastDesc);
+                    View toastLayout = createToastLayout(target, toastDesc);
+                    WindowManager.LayoutParams lp = createLayoutParams(target, toastLayout, toastDesc);
 
-                    WindowManager windowManager = (WindowManager) view.getContext()
+                    WindowManager windowManager = (WindowManager) target.getContext()
                             .getSystemService(Context.WINDOW_SERVICE);
 
                     windowManager.addView(toastLayout, lp);
@@ -173,19 +173,26 @@ public class BToast {
                     toasts.notifyAll();
                 }
             } else {
-                if (currentToastView != null && currentToastView.get() != null) {
-                    View view = currentToastView.get();
-                    WindowManager windowManager =
-                            (WindowManager) view.getContext().getSystemService(Context.WINDOW_SERVICE);
-                    windowManager.removeView(view);
-                }
-
+                removeCurrentToastView();
                 synchronized (toasts) {
                     toasts.notifyAll();
                 }
             }
         }
     }
+
+    private static void removeCurrentToastView() {
+        if (currentToastView != null && currentToastView.get() != null) {
+            View view = currentToastView.get();
+            WindowManager windowManager =
+                    (WindowManager) view.getContext().getSystemService(Context.WINDOW_SERVICE);
+            if (windowManager != null) {
+                windowManager.removeView(view);
+            }
+        }
+        currentToastView = null;
+    }
+
 
     private static View createToastLayout(View target, ToastDesc toastDesc) {
         if (toastDesc.animate) {
@@ -412,7 +419,6 @@ public class BToast {
                             + toastDesc.offsetW, View.MeasureSpec.EXACTLY);
                     content.measure(measureSpecB,
                             ViewGroup.LayoutParams.WRAP_CONTENT);
-                    Log.d("VY", content.getMeasuredHeight() + "");
                     lp.x = viewLocation[0] + toastDesc.offsetX;
                     lp.y = viewLocation[1] + target.getMeasuredHeight() + toastDesc.offsetY;
                     lp.width = target.getMeasuredWidth() + toastDesc.offsetW;
@@ -1011,7 +1017,7 @@ public class BToast {
 
         @Override
         public void onActivityPaused(Activity activity) {
-
+            removeCurrentToastView();
         }
 
         @Override
