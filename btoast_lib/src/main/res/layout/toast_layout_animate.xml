@@ -2,6 +2,7 @@
 <com.bravin.btoast.view.AnimationLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/al_layout"
+    android:background="#AC66DA"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
@@ -9,6 +10,7 @@
         android:id="@+id/toast_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="#1166DD"
         android:paddingStart="12dp"
         android:paddingEnd="12dp">
 

@@ -25,7 +25,7 @@ publish {
     userOrg = 'bsss'
     groupId = 'com.bravin.btoast'
     artifactId = 'BToast'
-    publishVersion = '1.0.1'
+    publishVersion = '1.0.3'
     desc = 'android Toast util'
     website = 'https://github.com/bravinshi/BToast'
 }

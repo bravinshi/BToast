@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -31,6 +32,7 @@ public class AnimationLayout extends RelativeLayout implements ValueAnimator.Ani
 
     public AnimationLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
+        init();
     }
 
     public AnimationLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
